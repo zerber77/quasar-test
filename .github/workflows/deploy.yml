@@ -24,9 +24,11 @@ jobs:
       - name: 3
         run: echo "${{ secrets.key }}" > "$HOME/.ssh/key"
       - name: 4
-        run: chmod 600 "$HOME/.ssh/key"
+        run: chmod 777 "$HOME/.ssh/key"
       - name: 5
         run: sudo rsync -avxP /home/runner/work/quasar-test/quasar-test/dist/ u0246426@server33.hosting.reg.ru:/www/test
+
+        cd /home/runner/work/quasar-test/quasar-test/dist/ && rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . u0246426@server33.hosting.reg.ru:/www/test
 
 
   #      - name: Upload dist
