@@ -23,7 +23,7 @@ jobs:
         run: mkdir "$HOME/.ssh"
       - name: 3
         run: echo "${{ secrets.key }}" > "$HOME/.ssh/key"
-      - name: 3.1
+      - name: 3.11
         run: echo "${{ secrets.key }}"
       - name: 4
         run: chmod 600 "$HOME/.ssh/key"
