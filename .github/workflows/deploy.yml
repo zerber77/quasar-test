@@ -9,5 +9,5 @@ jobs:
       - name: Install deps
         run: npm ci
       - name: Build app
-        run: quasar build
+        run: npm run build
 
