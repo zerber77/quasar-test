@@ -17,6 +17,7 @@ jobs:
         run: npm run build
       - name: Copy api
         run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
+      - run: ls /home/runner/work/quasar-test/quasar-test/
 #      - name: Upload dist
 #        uses: actions/upload-artifact@v3
 #        with:
@@ -36,7 +37,7 @@ jobs:
     steps:
       - name: Get repo
         uses: actions/checkout@v3
-      - run: ls cd /home/runner/work/quasar-test/quasar-test/
+      - run: ls /home/runner/work/quasar-test/quasar-test/
       # Setup key
 #      - run: set -eu
 #      - run: mkdir "$HOME/.ssh"
