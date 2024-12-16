@@ -20,13 +20,13 @@ jobs:
       - name: 1
         run: set -eu
       - name: 2
-        run: mkdir "$HOME/.ssh"
+        run: mkdir $HOME/.ssh
       - name: 3
-        run: echo "${{ secrets.key }}" > "$HOME/.ssh/key"
+        run: echo ${{ secrets.key }} > $HOME/.ssh/key
       - name: 3.11
-        run: echo "${{ secrets.key }}"
+        run: echo ${{ secrets.key }}
       - name: 4
-        run: chmod 600 "$HOME/.ssh/key"
+        run: chmod 600 $HOME/.ssh/key
       - name: 5
         run: scp -r /home/runner/work/quasar-test/quasar-test/dist/ u0246426@31.31.196.36:/www/test
 
