@@ -17,4 +17,17 @@ jobs:
         run: npm run build
       - name: Copy api
         run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
+      - name: Upload dist
+        uses: actions/upload-artifact@v3
+        with:
+          path: dist
+          key: dist-files
+  download:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download dist files
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
 
