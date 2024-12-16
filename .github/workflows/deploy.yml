@@ -17,8 +17,14 @@ jobs:
         run: npm run build
       - name: Copy api
         run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
-      - run: ls /home/runner/work/quasar-test/quasar-test/
-#      - name: Upload dist
+        run: set -eu
+        run: mkdir "$HOME/.ssh"
+        run: echo "${{ secrets.key }}" > "$HOME/.ssh/key"
+        run: chmod 600 "$HOME/.ssh/key"
+        run: cd /home/runner/work/quasar-test/quasar-test/dist/ && rsync -e "ssh -p 20022 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . u0246426@server33.hosting.reg.ru:/www/test
+
+
+  #      - name: Upload dist
 #        uses: actions/upload-artifact@v3
 #        with:
 #          path: dist
@@ -31,17 +37,17 @@ jobs:
 #        uses: actions/download-artifact@v3
 #        with:
 #          name: dist-files
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get repo
-        uses: actions/checkout@v3
-      - run: ls /home/runner/work/quasar-test/quasar-test/
+#  deploy:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Get repo
+#        uses: actions/checkout@v3
+#      - run: ls /home/runner/work/quasar-test/quasar-test/
       # Setup key
 #      - run: set -eu
 #      - run: mkdir "$HOME/.ssh"
 #      - run: echo "${{ secrets.key }}" > "$HOME/.ssh/key"
 #      - run: chmod 600 "$HOME/.ssh/key"
- #     - run: cd /home/runner/work/quasar-test/quasar-test/dist/ && rsync -e "ssh -p 20022 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . u0246426@server33.hosting.reg.ru:/www/test
+#     - run: cd /home/runner/work/quasar-test/quasar-test/dist/ && rsync -e "ssh -p 20022 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . u0246426@server33.hosting.reg.ru:/www/test
 
