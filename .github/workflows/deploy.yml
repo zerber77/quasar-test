@@ -1,0 +1,13 @@
+name: regru
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get repo
+        uses: actions/checkout@v3
+      - name: Install deps
+        run: npm ci
+      - name: Build app
+        run: quasar build
+
