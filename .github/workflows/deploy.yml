@@ -20,7 +20,7 @@ jobs:
       - name: 3
         env:
           HOST: ${{ secrets.HOST }}
-        run: ping ${{ HOST }}
+        run: ping ${{ env.HOST }}
 
 
 #      - name: Copy folder content recursively to remote
