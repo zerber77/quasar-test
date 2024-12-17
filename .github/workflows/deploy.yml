@@ -17,18 +17,27 @@ jobs:
         run: npm run build
       - name: Copy api
         run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
-      - name: 1
-        run: set -eu
-      - name: 2
-        run: mkdir $HOME/.ssh
-      - name: 3
-        run: echo ${{ secrets.key }} > $HOME/.ssh/key
-      - name: 3.11
-        run: echo ${{ secrets.key }}
-      - name: 4
-        run: chmod 600 $HOME/.ssh/key
-      - name: 5
-        run: scp -r /home/runner/work/quasar-test/quasar-test/dist/ u0246426@31.31.196.36:/www/test
+      - name: Copy folder content recursively to remote
+        uses: ./
+        with:
+          local: home/runner/work/quasar-test/quasar-test/dist/spa/
+          remote: scp/www/test
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.PASSWORD }}
+          privateKey: ${{ secrets.PRIVATE_KEY}}
+#      - name: 1
+#        run: set -eu
+#      - name: 2
+#        run: mkdir $HOME/.ssh
+#      - name: 3
+#        run: echo ${{ secrets.key }} > $HOME/.ssh/key
+#      - name: 3.11
+#        run: echo ${{ secrets.key }}
+#      - name: 4
+#        run: chmod 600 $HOME/.ssh/key
+#      - name: 5
+#        run: scp -r /home/runner/work/quasar-test/quasar-test/dist/ u0246426@31.31.196.36:/www/test
 
 #        cd /home/runner/work/quasar-test/quasar-test/dist/ && rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . u0246426@server33.hosting.reg.ru:/www/test
 
