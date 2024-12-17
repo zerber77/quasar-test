@@ -6,19 +6,21 @@ jobs:
     steps:
       - name: Get repo
         uses: actions/checkout@v3
-      - name: Cache deps
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: Install deps
-        run: npm ci
-      - name: Build app
-        run: npm run build
-      - name: Copy api
-        run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
+#      - name: Cache deps
+#        uses: actions/cache@v3
+#        with:
+#          path: ~/.npm
+#          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+#      - name: Install deps
+#        run: npm ci
+#      - name: Build app
+#        run: npm run build
+#      - name: Copy api
+#        run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
       - name: 3
-        run: ping ${{ secrets.HOST }}
+        env:
+          HOST: ${{ secrets.HOST }}
+        run: ping ${{ HOST }}
 
 
 #      - name: Copy folder content recursively to remote
