@@ -17,15 +17,21 @@ jobs:
         run: npm run build
       - name: Copy api
         run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
-      - name: Copy folder content recursively to remote
-        uses: garygrossgarten/github-action-scp@release
-        with:
-          local: /home/runner/work/quasar-test/quasar-test/dist/spa/
-          remote: scp/www/test
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.PASSWORD }}
-          privateKey: ${{ secrets.PRIVATE_KEY}}
+      - name: 3
+        run: echo ${{ secrets.HOST }}
+
+#      - name: Copy folder content recursively to remote
+#        uses: garygrossgarten/github-action-scp@release
+#        with:
+#          local: /home/runner/work/quasar-test/quasar-test/dist/spa/
+#          remote: scp/www/test
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.SSH_USER }}
+#          password: ${{ secrets.PASSWORD }}
+#          privateKey: ${{ secrets.PRIVATE_KEY}}
+
+
+
 #      - name: 1
 #        run: set -eu
 #      - name: 2
