@@ -23,6 +23,8 @@ jobs:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
         run: echo "$SECRETS_CONTEXT"
 
+
+
 #      - name: Copy folder content recursively to remote
 #        uses: garygrossgarten/github-action-scp@release
 #        with:
