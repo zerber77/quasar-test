@@ -18,7 +18,7 @@ jobs:
       - name: Copy api
         run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
       - name: 3
-        run: echo ${{ secrets.HOST }}
+        run: ping ${{ secrets.HOST }}
 
 
 #      - name: Copy folder content recursively to remote
