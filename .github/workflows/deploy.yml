@@ -17,24 +17,22 @@ jobs:
 #        run: npm run build
 #      - name: Copy api
 #        run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
-      - name: 3
-        shell: bash
-        env:
-          SECRETS_CONTEXT: ${{ toJson(secrets) }}
-        run: echo "$SECRETS_CONTEXT"
 
+       - name: Copy folder content recursively to remote
+         uses: garygrossgarten/github-action-scp@release
+         with:
+           local: /home/runner/work/quasar-test/quasar-test/
+           remote: scp/www/test
+           host: ${{ secrets.HOST }}
+           username: ${{ secrets.SSH_USER }}
+           password: ${{ secrets.PASSWORD }}
+           privateKey: ${{ secrets.PRIVATE_KEY}}
 
-
-#      - name: Copy folder content recursively to remote
-#        uses: garygrossgarten/github-action-scp@release
-#        with:
-#          local: /home/runner/work/quasar-test/quasar-test/dist/spa/
-#          remote: scp/www/test
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.SSH_USER }}
-#          password: ${{ secrets.PASSWORD }}
-#          privateKey: ${{ secrets.PRIVATE_KEY}}
-
+      #      - name: 3
+      #        shell: bash
+      #        env:
+      #          SECRETS_CONTEXT: ${{ toJson(secrets) }}
+      #        run: echo "$SECRETS_CONTEXT"
 
 
 #      - name: 1
