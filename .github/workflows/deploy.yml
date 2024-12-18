@@ -48,6 +48,7 @@ jobs:
       - name: 5
         run: cd /home/runner/work/quasar-test/quasar-test/ && rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . u0246426@server33.hosting.reg.ru:/www/test
 
+
 #        run: scp -r /home/runner/work/quasar-test/quasar-test/ u0246426@31.31.196.36:/www/test
 
 #        cd /home/runner/work/quasar-test/quasar-test/dist/ && rsync -e "ssh -p 22 -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . u0246426@server33.hosting.reg.ru:/www/test
