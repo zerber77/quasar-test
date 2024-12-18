@@ -9,13 +9,14 @@
 
      <q-item>
         <q-card>
-           <h1 class="justify-center">Ответ:{{apiServer}}</h1>
+           <h1 class="justify-center">Ответ:{{}}</h1>
          </q-card>
         <q-btn label="Dialog" color="primary" @click="click()" />
     </q-item>
     <q-item v-for="item in apiServer">
       <div>{{item.id}}</div>
       <div>{{item.name}}</div>
+      <div>{{item.email}}</div>
     </q-item>
 
 
