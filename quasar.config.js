@@ -60,7 +60,7 @@ module.exports = configure(function (/* ctx */) {
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
       extendViteConf (viteConf, { isClient, isServer }) {
-        viteConf.base = '/testspa/spa/'; // <=== add this line
+        viteConf.base = '/spa/'; // <=== add this line
       },
       // publicPath: '/',
       // analyze: true,
