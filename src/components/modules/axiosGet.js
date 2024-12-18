@@ -21,7 +21,7 @@ export function useGet(url,options={},showLoader =true){
   const request = async () => {
     try {
 //     const res = await axios.get('http://quasar-test/'+url)
-      const res = await axios.get('/testspa/spa/'+url)
+     const res = await axios.get('/spa/'+url)
       response.value = await res.data
  //     if (showLoader) Loading.hide()
     }catch (e) {

@@ -13,7 +13,10 @@
          </q-card>
         <q-btn label="Dialog" color="primary" @click="click()" />
     </q-item>
-
+    <q-item v-for="item in apiServer">
+      <div>{{item.id}}</div>
+      <div>{{item.name}}</div>
+    </q-item>
 
 
 <!--    <post-card v-model="name" label="Name" >-->
@@ -49,7 +52,7 @@ const  click = async ()=>{
   modal.value = true
   const {response} = await getIndex()//   await axios.get('http://quasar-test/api/')
   apiServer.value = response.value
-  console.log(response.value)
+  console.log(apiServer.value)
 }
 
 </script>
