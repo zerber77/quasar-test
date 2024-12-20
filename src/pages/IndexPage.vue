@@ -13,24 +13,23 @@
          </q-card>
         <q-btn label="Dialog" color="primary" @click="click()" />
     </q-item>
-    <q-item v-for="item in apiServer">
-      <div>{{item.id}}</div>
-      <div>{{item.name}}</div>
-      <div>{{item.email}}</div>
-    </q-item>
 
+    <div class="q-pa-md row items-start q-gutter-md">
+        <q-card
+          v-for="item in apiServer"
+          class="my-card text-white"
+          style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
+        >
+          <q-card-section>
+            <div class="text-h6">{{item.head}}</div>
+            <div class="text-subtitle2">by {{item.agency}}</div>
+          </q-card-section>
 
-<!--    <post-card v-model="name" label="Name" >-->
-<!--      <template v-slot:cardTitle>Named slots</template>-->
-<!--    </post-card>-->
-<!--    <pre>{{name}}</pre>-->
-<!--    <post-card v-model="name" label="Name">-->
-<!--      <template v-slot:cardTitle>Named slots22222</template>-->
-<!--    </post-card>-->
-
-
-
-
+          <q-card-section class="q-pt-none">
+            {{item.text}}
+          </q-card-section>
+        </q-card>
+    </div>
   </q-page>
 </template>
 
@@ -43,6 +42,7 @@ import ModalComponent from 'components/Modals/ModalComponent.vue';
 
 import {getIndex} from "components/modules/getIndex";
 import axios from "axios";
+import routes from "src/router/routes";
 
 const name = ref('1111')
 const modal = ref(false)
@@ -54,6 +54,13 @@ const  click = async ()=>{
   const {response} = await getIndex()//   await axios.get('http://quasar-test/api/')
   apiServer.value = response.value
   console.log(apiServer.value)
+
 }
 
 </script>
+
+<style lang="sass" scoped>
+.my-card
+  width: 100%
+  max-width: 250px
+</style>

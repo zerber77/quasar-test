@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout v-if="essentialLinks" view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -29,17 +29,18 @@
         <q-item-label
           header
         >
-          Essential Links
+          Агентства
         </q-item-label>
 
         <EssentialLink
           v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
+          :key="link.agency"
+          :agency="link.agency"
+          :link="link.agency"
         />
       </q-list>
     </q-drawer>
-
+<!--<pre>{{essentialLinks}}</pre>-->
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -47,9 +48,11 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import {defineComponent, onMounted, ref} from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
-
+import {getAgencies} from "components/modules/getAgencies";
+import routes from "src/router/routes";
+/*
 const linksList = [
   {
     title: 'Docs',
@@ -94,6 +97,7 @@ const linksList = [
     link: 'https://awesome.quasar.dev'
   }
 ]
+*/
 
 export default defineComponent({
   name: 'MainLayout',
@@ -104,12 +108,18 @@ export default defineComponent({
 
   setup () {
     const leftDrawerOpen = ref(false)
+    let essentialLinks = ref({})
+    onMounted(async ()=>{
+      const {response} = await  getAgencies()
+      essentialLinks.value = response.value
+    })
 
     return {
-      essentialLinks: linksList,
+      essentialLinks,
       leftDrawerOpen,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
+        console.log(essentialLinks.value)
       }
     }
   }

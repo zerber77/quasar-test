@@ -1,6 +1,6 @@
 <?php
 $dblocation = "localhost";
-$dbname = "quasar";
+$dbname = "u0246426_default";
 $dbuser = "root";
 $dbpasswd = "";
 
