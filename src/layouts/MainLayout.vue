@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-         ПРИЛОЖЕНИЕ НА QUASAR
+         МИРОВЫЕ НОВОСТИ
         </q-toolbar-title>
 
         <div>Все о городе Орел</div>

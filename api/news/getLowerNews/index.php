@@ -1,7 +1,11 @@
 <?php
 $agency = '';
+$id = '';
 if(isset($_GET['agency'])) {
   $agency = $_GET['agency'];
+}
+if(isset($_GET['l_id'])) {
+  $id = $_GET['l_id'];
 }
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -12,7 +16,7 @@ session_set_cookie_params(3600*24*3);
 session_start();
 //include ("../../../pages/const.php");
 include("../../const.php");
-$result = mysqli_query($dbcnx, "SELECT * FROM mynews WHERE agency= '$agency' LIMIT 5");
+$result = mysqli_query($dbcnx, "SELECT * FROM mynews WHERE agency= '$agency' && id < '$id' ORDER BY id DESC LIMIT 5");
 $arr = array();
 while ($row = mysqli_fetch_assoc($result)) {
   $arr[] = $row;

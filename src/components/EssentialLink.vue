@@ -20,7 +20,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import {getNewsByAgency} from "components/modules/getNewsByAgency";
+import {getLastNewsByAgency} from "components/modules/getLastNewsByAgency";
 import {getAgencies} from "components/modules/getAgencies";
 //import {createRouter as $router, createRouter as router} from "vue-router";
 import { useRouter } from 'vue-router';
@@ -45,7 +45,7 @@ export default defineComponent({
 //    let obj = {}
     return{
       async getNews(url){
-        const {response} = await  getNewsByAgency(url)
+        const {response} = await  getLastNewsByAgency(url)
 //       console.log(response)
         let obj = response.value
         console.log(router)

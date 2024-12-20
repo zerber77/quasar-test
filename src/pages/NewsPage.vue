@@ -5,6 +5,7 @@
         v-model="current"
         :max="agCount"
         input
+        @update:model-value = "paginateNews()"
       />
     </div>
 
@@ -29,9 +30,12 @@
 
 <script>
 import {useRouter} from "vue-router";
-import {getNewsByAgency} from "components/modules/getNewsByAgency";
-import {onMounted, onUpdated, ref} from "vue";
+import {getLastNewsByAgency} from "components/modules/getLastNewsByAgency";
+import {onMounted, onUpdated, ref, watch} from "vue";
 import {getCountByAgency} from "components/modules/getCountByAgency";
+import {getFirstNewsByAgency} from "components/modules/getFirstNewsByAgency";
+import {getLowerNews} from "components/modules/getLowerNews";
+import {getUpperNews} from "components/modules/getUpperNews";
 
 export default {
   name: "NewsPage",
@@ -47,34 +51,69 @@ export default {
     let agNews = ref({})
     let agCount = ref(0)
     let current = ref(agCount.value)
+    const NEWS_PER_PAGE = 5
 
-    async function getNews(ag){
-       const {response} = await  getNewsByAgency(ag)
+///////////////////////////////////////////////////////////////////////
+    async function getLastNews(ag){
+       const {response} = await  getLastNewsByAgency(ag)
        agNews.value = response.value
+    }
+
+    async function getFirstNews(ag){
+      const {response} = await  getFirstNewsByAgency(ag)
+      agNews.value = response.value
     }
 
     async function getCountAg(ag){
       const {response} = await  getCountByAgency(ag)
-      agCount.value = Number(response.value)
+      agCount.value = Math.ceil(Number(response.value)/NEWS_PER_PAGE)
       current.value = Number(agCount.value)
     }
 
+    async function getLNews(ag,id){
+      const {response} = await  getLowerNews(ag,id)
+      agNews.value = response.value
+    }
+    async function getUNews(ag,id){
+      const {response} = await  getUpperNews(ag,id)
+      agNews.value = response.value
+    }
+
+///////////////////////////////////////////////////////////////////////
     onMounted(()=>{
       agency.value = router.currentRoute.value.query.ag
       getCountAg(agency.value)
-      getNews(agency.value)
+      getLastNews(agency.value)
     })
     onUpdated(()=>{
       agency.value = router.currentRoute.value.query.ag
       getCountAg(agency.value)
-      getNews(agency.value)
+      getLastNews(agency.value)
     })
 
+/////////////////////////////////////////////////////////////////////////
+    watch((current),(newVal,oldVal)=>{
+      console.log(current.value, oldVal)
+      if(current.value === 1 ){
+        getFirstNews(agency.value)
+      }
+      else if(current.value === agCount.value){
+        getLastNews(agency.value)
+      }
+      else if(current.value < oldVal){
+        getLNews(agency.value,agNews.value[0].id)
+      }
+      else if(current.value > oldVal){
+        getUNews(agency.value,agNews.value[NEWS_PER_PAGE-1].id)
+      }
+    })
 
-//    let obj = {}
     return{
       agency,agNews,agCount,
       current,
+      paginateNews(val){
+        console.log(current.value)
+      }
     }
   }
 }
