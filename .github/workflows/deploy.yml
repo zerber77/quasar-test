@@ -16,7 +16,7 @@ jobs:
       - name: Build app
         run: npm run build
       - name: Create bd connection
-        run: echo ${{ secrets.BD_connection }} > /home/runner/work/quasar-test/quasar-test/api/const.php
+        run: echo 111111 > /home/runner/work/quasar-test/quasar-test/api/const.php
       - name: Copy api
         run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
 
