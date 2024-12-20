@@ -11,8 +11,14 @@
 <!--      <q-icon :name="icon" />-->
 <!--    </q-item-section>-->
 
-    <q-item-section>
-      <q-item-label>{{ agency}}</q-item-label>
+    <q-item-section
+      style="background: radial-gradient(circle, #afeca2 0%, #34972f 100%)"
+    >
+      <q-item-label
+        class="text-center text-body1"
+      >
+        {{ agency}}
+      </q-item-label>
 <!--      <q-item-label caption>{{ agency }}</q-item-label>-->
     </q-item-section>
   </q-item>

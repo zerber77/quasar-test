@@ -25,9 +25,10 @@
       show-if-above
       bordered
     >
-      <q-list>
+      <q-list class="">
         <q-item-label
           header
+          class="text-h4 text-center"
         >
           Агентства
         </q-item-label>

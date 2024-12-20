@@ -1,6 +1,6 @@
 <template>
-  <q-page class="flex flex-center">
-    <div class="q-pa-lg flex flex-center">
+  <q-page class="flex-center">
+    <div class="col-12 q-pa-lg row flex-center">
       <q-pagination
         v-model="current"
         :max="agCount"
@@ -9,7 +9,7 @@
       />
     </div>
 
-    <div class="q-pa-md row items-start q-gutter-md">
+    <div class="col-12 q-pa-lg row items-start q-gutter-md flex-center">
       <q-card
         v-for="item in agNews"
         class="my-card text-white"
@@ -76,7 +76,8 @@ export default {
     }
     async function getUNews(ag,id){
       const {response} = await  getUpperNews(ag,id)
-      agNews.value = response.value
+      if(response.value.length < NEWS_PER_PAGE) await getLastNews(ag)
+      else agNews.value = response.value
     }
 
 ///////////////////////////////////////////////////////////////////////
