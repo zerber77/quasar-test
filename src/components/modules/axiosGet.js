@@ -11,21 +11,21 @@ import axios from "axios";
 /// Не отображать, если элемент (например select имеет свой индикатор загрузки)
 export function useGet(url,options={},showLoader =true){
   const response = ref()
-  // if (showLoader) Loading.show({
-  //   spinner: QSpinnerGears,
-  //   spinnerColor: 'blue-7',
-  //   messageColor: 'black',
-  //   backgroundColor: 'grey',
-  //   message: 'Получение данных'
-  // })
+  if (showLoader) Loading.show({
+    spinner: QSpinnerGears,
+    spinnerColor: 'blue-7',
+    messageColor: 'black',
+    backgroundColor: 'grey',
+    message: 'Получение данных'
+  })
   const request = async () => {
     try {
 //     const res = await axios.get('http://quasar-test/'+url)
-     const res = await axios.get('/spa/'+url)
+      const res = await axios.get('/spa/'+url)
       response.value = await res.data
- //     if (showLoader) Loading.hide()
+      if (showLoader) Loading.hide()
     }catch (e) {
-      // Loading.hide()
+      Loading.hide()
       // console.log('ERROR in getApi',e.message)
       throw e.message
     }

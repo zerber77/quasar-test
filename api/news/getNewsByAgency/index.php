@@ -12,7 +12,7 @@ session_set_cookie_params(3600*24*3);
 session_start();
 //include ("../../../pages/const.php");
 include("../../const.php");
-$result = mysqli_query($dbcnx, "SELECT * FROM mynews WHERE agency= '$agency'");
+$result = mysqli_query($dbcnx, "SELECT * FROM mynews WHERE agency= '$agency' LIMIT 5");
 $arr = array();
 while ($row = mysqli_fetch_assoc($result)) {
   $arr[] = $row;
