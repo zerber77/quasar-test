@@ -18,7 +18,7 @@ jobs:
       - name: Copy api
         run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
       - name: Create bd connection
-        run: echo ${{ secrets.BD_connection }} > /home/runner/work/quasar-test/quasar-test/dist/spa/api/const.php
+        run: sudo echo ${{ secrets.BD_connection }} > /home/runner/work/quasar-test/quasar-test/dist/spa/api/const.php
 
       - name: Copy folder content recursively to remote
         uses: garygrossgarten/github-action-scp@release
