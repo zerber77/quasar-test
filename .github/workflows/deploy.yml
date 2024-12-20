@@ -20,7 +20,6 @@ jobs:
       - name: Copy api
         run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
 
-#${{ secrets.BD_connection }}
       - name: Copy folder content recursively to remote
         uses: garygrossgarten/github-action-scp@release
         with:
@@ -29,7 +28,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.PASSWORD }}
-#
 
       #      - name: 3
       #        shell: bash
