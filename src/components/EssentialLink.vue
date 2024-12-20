@@ -12,7 +12,7 @@
 <!--    </q-item-section>-->
 
     <q-item-section
-      style="background: radial-gradient(circle, #afeca2 0%, #34972f 100%)"
+      style="background: radial-gradient(circle, #2ecc71 0%, #0fac55 100%)"
     >
       <q-item-label
         class="text-center text-body1"

@@ -5,11 +5,13 @@
         v-model="current"
         :max="agCount"
         input
+        size="30px"
+        color="secondary"
         @update:model-value = "paginateNews()"
       />
     </div>
-
-    <div class="col-12 q-pa-lg row items-start q-gutter-md flex-center">
+<!--flex-center items-start-->
+    <div class="q-pa-lg row q-gutter-md ">
       <q-card
         v-for="item in agNews"
         class="my-card text-white"
@@ -22,6 +24,7 @@
 
         <q-card-section class="q-pt-none">
           {{item.text}}
+           <div><a :href="item.link" target="_blank">Ссылка</a></div>
         </q-card-section>
       </q-card>
     </div>
@@ -124,4 +127,6 @@ export default {
 .my-card
   width: 100%
   max-width: 250px
+
+
 </style>
