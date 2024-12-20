@@ -1,5 +1,13 @@
 <template>
   <q-page class="flex flex-center">
+    <div class="q-pa-lg flex flex-center">
+      <q-pagination
+        v-model="current"
+        :max="agCount"
+        input
+      />
+    </div>
+
     <div class="q-pa-md row items-start q-gutter-md">
       <q-card
         v-for="item in agNews"
@@ -22,7 +30,8 @@
 <script>
 import {useRouter} from "vue-router";
 import {getNewsByAgency} from "components/modules/getNewsByAgency";
-import {onUpdated, ref} from "vue";
+import {onMounted, onUpdated, ref} from "vue";
+import {getCountByAgency} from "components/modules/getCountByAgency";
 
 export default {
   name: "NewsPage",
@@ -36,19 +45,36 @@ export default {
     const router = useRouter()
     let agency = ref(router.currentRoute.value.query)
     let agNews = ref({})
+    let agCount = ref(0)
+    let current = ref(agCount.value)
 
-    async function getNews(url){
-       const {response} = await  getNewsByAgency(url)
+    async function getNews(ag){
+       const {response} = await  getNewsByAgency(ag)
        agNews.value = response.value
     }
 
-    onUpdated(()=>{
+    async function getCountAg(ag){
+      const {response} = await  getCountByAgency(ag)
+      agCount.value = Number(response.value)
+      current.value = Number(agCount.value)
+    }
+
+    onMounted(()=>{
       agency.value = router.currentRoute.value.query.ag
+      getCountAg(agency.value)
       getNews(agency.value)
     })
+    onUpdated(()=>{
+      agency.value = router.currentRoute.value.query.ag
+      getCountAg(agency.value)
+      getNews(agency.value)
+    })
+
+
 //    let obj = {}
     return{
-      agency,agNews,
+      agency,agNews,agCount,
+      current,
     }
   }
 }
