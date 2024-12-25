@@ -1,6 +1,7 @@
 <template>
   <q-item
     clickable
+    style="background: radial-gradient(circle, #ffffff 0%, #cdd2d2 100%)"
     @click="getNews(link)"
   >
 <!--    @click=""-->
@@ -11,9 +12,7 @@
 <!--      <q-icon :name="icon" />-->
 <!--    </q-item-section>-->
 
-    <q-item-section
-      style="background: radial-gradient(circle, #2ecc71 0%, #0fac55 100%)"
-    >
+    <q-item-section>
       <q-item-label
         class="text-center text-body1"
       >
@@ -50,15 +49,8 @@ export default defineComponent({
     const router = useRouter()
 //    let obj = {}
     return{
-      async getNews(url){
-        const {response} = await  getLastNewsByAgency(url)
-//       console.log(response)
-        let obj = response.value
-        console.log(router)
- //      if (router.currentRoute.value.fullPath.includes('NewsPage')) router.go(-1)
-  //      console.log(router)
- //       await router.push({path:'/', query: {ag:url} })
-        await router.push({path:'/NewsPage/', query: {ag:url} })
+       getNews(url){
+         router.push({path:'/NewsPage/', query: {ag:url} })
       }
     }
   }

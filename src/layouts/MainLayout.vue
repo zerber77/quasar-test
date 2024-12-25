@@ -1,5 +1,5 @@
 <template>
-  <q-layout v-if="essentialLinks" view="lHh Lpr lFf">
+  <q-layout v-if="essentialLinks"  view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -11,11 +11,34 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-         МИРОВЫЕ НОВОСТИ
-        </q-toolbar-title>
+<!--        <q-toolbar-title>-->
+<!--         МИРОВЫЕ НОВОСТИ-->
+<!--        </q-toolbar-title>-->
 
-        <div>Все о городе Орел</div>
+        <q-separator dark vertical />
+        <q-item >
+            <q-btn-dropdown color="primary" label="Агентства">
+              <q-list>
+
+                <q-item
+                  v-for="link in essentialLinks"
+                  clickable
+                  v-close-popup
+                  @click="getNews(link.agency)">
+                  <q-item-section>
+                    <q-item-label>{{link.agency}}</q-item-label>
+                  </q-item-section>
+                </q-item>
+
+              </q-list>
+            </q-btn-dropdown>
+
+        </q-item>
+
+<!--        <q-separator dark vertical />-->
+<!--        <q-item  to="/" v-ripple exact>-->
+<!--          <q-toolbar-title text-color="white" >Штаты</q-toolbar-title>-->
+<!--        </q-item>-->
 
       </q-toolbar>
     </q-header>
@@ -53,6 +76,7 @@ import {defineComponent, onMounted, ref} from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import {getAgencies} from "components/modules/getAgencies";
 import routes from "src/router/routes";
+import { useRouter } from 'vue-router';
 /*
 const linksList = [
   {
@@ -108,6 +132,7 @@ export default defineComponent({
   },
 
   setup () {
+    const router = useRouter()
     const leftDrawerOpen = ref(false)
     let essentialLinks = ref({})
     onMounted(async ()=>{
@@ -121,6 +146,9 @@ export default defineComponent({
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
         console.log(essentialLinks.value)
+      },
+      getNews(url){
+        router.push({path:'/NewsPage/', query: {ag:url} })
       }
     }
   }

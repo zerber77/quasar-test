@@ -105,7 +105,7 @@ export default {
         getLastNews(agency.value)
       }
       else if(current.value < oldVal){
-        getLNews(agency.value,agNews.value[0].id)
+        getLNews(agency.value,agNews.value[0].id - NEWS_PER_PAGE + 1)
       }
       else if(current.value > oldVal){
         getUNews(agency.value,agNews.value[NEWS_PER_PAGE-1].id)
