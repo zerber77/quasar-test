@@ -20,7 +20,7 @@
 
     <div class="row justify-center">
       <q-btn :label="loading ? 'Остановить загрузку' : 'Посчитать'" color="primary" @click="click()" />
-      <pre>{{loading}}</pre>
+<!--      <pre>{{loading}}</pre>-->
       <div class="col-12">
          <q-item>
            <VueApexCharts
@@ -88,13 +88,13 @@ const  click = async ()=>{
   if (!loading.value) {
     options.value.xaxis.categories.length = 0
     series.value[0].data.length = 0
+    series.value[0].name = word.value
     await getDatesArray(dateRange.value.from, dateRange.value.to)
   }
   loading.value = false
 }
 
 function setRange (range) {
-  console.log('111',range)
   dateRange.value.from =  range.from
   dateRange.value.to = range.to
 }
