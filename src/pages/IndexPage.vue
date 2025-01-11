@@ -85,9 +85,13 @@ const  click = async ()=>{
   series.value[0].data.push(count.value)
 }
 
-const getDatesArray = (start, end) => {
+const  getDatesArray = async (start, end) => {
   const arr = [];
   while(start <= end) {
+    const {response} = await getWordCountByDate(start, 'Trump')//   await axios.get('http://quasar-test/api/')
+    count.value = response.value
+    options.value.xaxis.categories.push(start)
+    series.value[0].data.push(count.value)
     arr.push(new Date(start).toISOString().slice(0, 10))
     const dt = new Date((start))//.toISOString().slice(0, 10)
     dt.setDate(dt.getDate() + 1)
@@ -96,12 +100,13 @@ const getDatesArray = (start, end) => {
   return arr;
 }
 
-getDatesArray(dateRange.value.from, dateRange.value.to).forEach(async(item)=>{
-  const {response} = await getWordCountByDate(item, 'Trump')//   await axios.get('http://quasar-test/api/')
-  count.value = response.value
-  options.value.xaxis.categories.push(item)
-  series.value[0].data.push(count.value)
-})
+getDatesArray(dateRange.value.from, dateRange.value.to)
+//   .forEach(async (item)=>{
+//   const {response} = await getWordCountByDate(item, 'Trump')//   await axios.get('http://quasar-test/api/')
+//   count.value = response.value
+//   options.value.xaxis.categories.push(item)
+//   series.value[0].data.push(count.value)
+// })
 
 
 </script>
