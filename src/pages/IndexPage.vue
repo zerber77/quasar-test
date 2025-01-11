@@ -6,14 +6,21 @@
       </div>
     </div>
 
-    <CalendarComponent/>
+    <div class="row">
+        <CalendarComponent
+          @rangeSet = "setRange"
+        />
+        <q-input v-model="word" label="Слово для счета" />
+    </div>
 <!--    <ModalComponent-->
 <!--      v-model="modal"-->
 <!--      :boundary-->
 <!--    >-->
 <!--    </ModalComponent>-->
+
     <div class="row justify-center">
-      <q-btn v-if="loading" label="Остановить загрузку" color="primary" @click="click()" />
+      <q-btn :label="loading ? 'Остановить загрузку' : 'Посчитать'" color="primary" @click="click()" />
+      <pre>{{loading}}</pre>
       <div class="col-12">
          <q-item>
            <VueApexCharts
@@ -39,7 +46,7 @@ import {getIndex} from "components/modules/getIndex";
 import {getWordCountByDate} from "components/modules/statistics/getWordCountByDate";
 
 
-const name = ref('1111')
+const word = ref('Trump')
 const loading = ref(false)
 let dateRange = ref({ from: new Date(Date.now()-86400000 * 9).toISOString().slice(0, 10) , to: new Date().toISOString().slice(0, 10) })
 let count = ref({})
@@ -53,20 +60,18 @@ const options =  ref({
   }
 })
 const series = ref([{
-  name: 'series-1',
+  name: word.value,
   data: []
 }])
 
-const  click = async ()=>{
- loading.value = false
-}
 
 const  getDatesArray = async (start, end) => {
   const arr = [];
   loading.value = true
   while(start <= end) {
     if (!loading.value) break
-    const {response} = await getWordCountByDate(start, 'Trump')//   await axios.get('http://quasar-test/api/')
+    ////отлов ишибок try!
+    const {response} = await getWordCountByDate(start, word.value)//   await axios.get('http://quasar-test/api/')
     count.value = response.value
     options.value.xaxis.categories.push(start)
     series.value[0].data.push(count.value)
@@ -79,7 +84,21 @@ const  getDatesArray = async (start, end) => {
   return arr;
 }
 
-getDatesArray(dateRange.value.from, dateRange.value.to)
+const  click = async ()=>{
+  if (!loading.value) {
+    options.value.xaxis.categories.length = 0
+    series.value[0].data.length = 0
+    await getDatesArray(dateRange.value.from, dateRange.value.to)
+  }
+  loading.value = false
+}
+
+function setRange (range) {
+  console.log('111',range)
+  dateRange.value.from =  range.from
+  dateRange.value.to = range.to
+}
+//getDatesArray(dateRange.value.from, dateRange.value.to)
 //   .forEach(async (item)=>{
 //   const {response} = await getWordCountByDate(item, 'Trump')//   await axios.get('http://quasar-test/api/')
 //   count.value = response.value
