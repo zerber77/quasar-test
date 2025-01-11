@@ -5,8 +5,10 @@
       range
       :locale="myLocale"
       mask="YYYY-MM-DD"
+      dark
+      bordered
     />
-    <q-item>{{dateRange}}</q-item>
+<!--    <q-item>{{dateRange}}</q-item>-->
   </div>
 </template>
 
