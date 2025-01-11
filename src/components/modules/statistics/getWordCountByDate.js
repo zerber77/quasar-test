@@ -2,7 +2,7 @@
 import {useGet} from "../axiosGet";
 
 export async function getWordCountByDate(date,word){
-  const {response, request} = useGet('api/statistics/wordCountByDate/?date='+date+'&word='+word)
+  const {response, request} = useGet('api/statistics/wordCountByDate/?date='+date+'&word='+word,{},false)
   try {
     await request()
   }catch (e) {
