@@ -7,7 +7,7 @@
       mask="YYYY-MM-DD"
       dark
       bordered
-      style="height: 350px"
+      style="height: 390px"
       @range-end = setRange()
     />
 <!--    <q-item>{{dateRange}}</q-item>-->
