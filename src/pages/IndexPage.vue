@@ -16,7 +16,8 @@
 
       <div class="col-12 col-md-8 q-pa-md">
               <q-btn :label="loading ? 'Остановить загрузку' : 'Посчитать'" color="primary" @click="click()" />
-                   <VueApexCharts
+               <q-item>
+                  <VueApexCharts
                      type="bar"
                      :options="options"
                      :series="series"
@@ -26,6 +27,7 @@
                    <q-inner-loading :showing="loading">
                      <q-spinner-gears size="50px" color="primary" />
                    </q-inner-loading>
+               </q-item>
       </div>
 
     </div>
