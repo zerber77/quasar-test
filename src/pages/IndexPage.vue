@@ -52,6 +52,12 @@ let count = ref({})
 const options =  ref({
   chart: {
     id: 'vuechart-example',
+    events: {
+      click(event, chartContext, opts) {
+        console.log(opts.config.series[opts.seriesIndex].name)
+        console.log(opts.config.xaxis.categories[opts.dataPointIndex])
+      }
+    }
   },
   xaxis: {
     categories: []
