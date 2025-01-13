@@ -1,35 +1,33 @@
 <template>
-  <q-page class="q-pa-md">
+  <q-page class="">
 <!--    <div class="row">-->
 <!--      <div class="col-12">-->
 <!--        <h4>Страница на этапе разработки</h4>-->
 <!--      </div>-->
 <!--    </div>-->
-    <div class="column">
+    <div class="row q-pa-md">
 
-      <div class="col-3 col-sm-6">
+      <div class="col-12 col-md-4 q-pa-md">
               <q-input v-model="word" label="Слово для счета" />
               <CalendarComponent
                 @rangeSet = "setRange"
               />
       </div>
 
-<!--      <div class="col-3 col-sm-6">-->
-<!--              <q-btn :label="loading ? 'Остановить загрузку' : 'Посчитать'" color="primary" @click="click()" />-->
-<!--                   <VueApexCharts-->
-<!--                     type="bar"-->
-<!--                     :options="options"-->
-<!--                     :series="series"-->
-<!--                     class="full"-->
-<!--                   >-->
-<!--                   </VueApexCharts>-->
-<!--                   <q-inner-loading :showing="loading">-->
-<!--                     <q-spinner-gears size="50px" color="primary" />-->
-<!--                   </q-inner-loading>-->
-<!--      </div>-->
-      <div class="col-3 col-sm-6">.col-3 .col-sm-6</div>
-      <div class="col-3 col-sm-6">.col-3 .col-sm-6</div>
-      <div class="col-3 col-sm-6">.col-3 .col-sm-6</div>
+      <div class="col-12 col-md-8 q-pa-md">
+              <q-btn :label="loading ? 'Остановить загрузку' : 'Посчитать'" color="primary" @click="click()" />
+                   <VueApexCharts
+                     type="bar"
+                     :options="options"
+                     :series="series"
+                     class="full"
+                   >
+                   </VueApexCharts>
+                   <q-inner-loading :showing="loading">
+                     <q-spinner-gears size="50px" color="primary" />
+                   </q-inner-loading>
+      </div>
+
     </div>
 
   </q-page>
@@ -112,6 +110,5 @@ function setRange (range) {
   width: 100%
   max-width: 250px
 .full
-  width: 100%
-
+  width: 80%
 </style>
