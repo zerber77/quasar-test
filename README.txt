@@ -13,3 +13,7 @@ axios-запросы делаем к этому серверу, например
 Скомпилить quasar build
 в каталог spa закинуть каталог api
 Архивируем, закидываем на хостинг и разархивируем в каталог  /testspa/spa/
+
+
+Перед npm install удалить apexcharts из packages. Потом установить отдельно
+npm install --save vue3-apexcharts

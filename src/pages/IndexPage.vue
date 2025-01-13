@@ -1,37 +1,35 @@
 <template>
-  <q-page class="column items-center">
-    <div class="row">
-      <div class="col-12">
-        <h4>Страница на этапе разработки</h4>
-      </div>
-    </div>
+  <q-page class="q-pa-md">
+<!--    <div class="row">-->
+<!--      <div class="col-12">-->
+<!--        <h4>Страница на этапе разработки</h4>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="column">
 
-    <div class="row">
-        <CalendarComponent
-          @rangeSet = "setRange"
-        />
-        <q-input v-model="word" label="Слово для счета" />
-    </div>
-<!--    <ModalComponent-->
-<!--      v-model="modal"-->
-<!--      :boundary-->
-<!--    >-->
-<!--    </ModalComponent>-->
-
-    <div class="row justify-center">
-      <q-btn :label="loading ? 'Остановить загрузку' : 'Посчитать'" color="primary" @click="click()" />
-<!--      <pre>{{loading}}</pre>-->
-      <div class="col-12">
-         <q-item>
-           <VueApexCharts
-             width="500"
-             type="bar"
-             :options="options"
-             :series="series"
-           >
-           </VueApexCharts>
-        </q-item>
+      <div class="col-3 col-sm-6">
+              <q-input v-model="word" label="Слово для счета" />
+              <CalendarComponent
+                @rangeSet = "setRange"
+              />
       </div>
+
+<!--      <div class="col-3 col-sm-6">-->
+<!--              <q-btn :label="loading ? 'Остановить загрузку' : 'Посчитать'" color="primary" @click="click()" />-->
+<!--                   <VueApexCharts-->
+<!--                     type="bar"-->
+<!--                     :options="options"-->
+<!--                     :series="series"-->
+<!--                     class="full"-->
+<!--                   >-->
+<!--                   </VueApexCharts>-->
+<!--                   <q-inner-loading :showing="loading">-->
+<!--                     <q-spinner-gears size="50px" color="primary" />-->
+<!--                   </q-inner-loading>-->
+<!--      </div>-->
+      <div class="col-3 col-sm-6">.col-3 .col-sm-6</div>
+      <div class="col-3 col-sm-6">.col-3 .col-sm-6</div>
+      <div class="col-3 col-sm-6">.col-3 .col-sm-6</div>
     </div>
 
   </q-page>
@@ -53,11 +51,11 @@ let count = ref({})
 
 const options =  ref({
   chart: {
-    id: 'vuechart-example'
+    id: 'vuechart-example',
   },
   xaxis: {
     categories: []
-  }
+  },
 })
 const series = ref([{
   name: word.value,
@@ -113,4 +111,7 @@ function setRange (range) {
 .my-card
   width: 100%
   max-width: 250px
+.full
+  width: 100%
+
 </style>
