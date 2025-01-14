@@ -12,7 +12,7 @@
                 @rangeSet = "setRange"
               />
       </div>
-      <div class="col-12 col-md-8 q-pa-md">
+      <div class="col-12 col-md-8">
               <q-btn :label="loading ? 'Остановить загрузку' : 'Посчитать'" color="primary" @click="click()" />
                <q-item>
                   <VueApexCharts
@@ -32,7 +32,7 @@
     <div class="row q-pa-md">
 <!--      <pre>{{optionsX}}</pre>-->
 <!--      <pre>{{seriesY}}</pre>-->
-        <div class="col-12 col-md-4 q-pa-md" style="min-height: 100px">
+        <div class="col-12 col-md-4 q-pa-md" style="min-height: 300px !important;">
           <ChartBarComponent
             :optionsX = "optionsX"
             :seriesY = "seriesY"
@@ -41,7 +41,7 @@
     </div>
 
 
-    <div class="col-12 q-pa-md " style="min-height: 100px">
+    <div class="col-12 q-pa-md " style="min-height: 200px">
 
       <div class="q-pa-lg row q-gutter-md flex-center">
         <q-item>
@@ -181,5 +181,6 @@ function setRange (range) {
   width: 100%
   max-width: 250px
 .full
-  width: 80%
+  width: 90%
+  min-height: 300px !important
 </style>
