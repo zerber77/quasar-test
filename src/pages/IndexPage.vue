@@ -29,12 +29,26 @@
       </div>
     </div>
 
+    <div class="row q-pa-md">
+<!--      <pre>{{optionsX}}</pre>-->
+<!--      <pre>{{seriesY}}</pre>-->
+        <div class="col-12 col-md-4 q-pa-md" style="min-height: 100px">
+          <ChartBarComponent
+            :optionsX = "optionsX"
+            :seriesY = "seriesY"
+          />
+        </div>
+    </div>
+
+
     <div class="col-12 q-pa-md " style="min-height: 100px">
 
       <div class="q-pa-lg row q-gutter-md flex-center">
-        <q-inner-loading :showing="loadingNews">
-          <q-spinner-gears size="50px" color="primary" />
-        </q-inner-loading>
+        <q-item>
+            <q-inner-loading :showing="loadingNews">
+              <q-spinner-gears size="50px" color="primary" />
+            </q-inner-loading>
+        </q-item>
           <q-card
             v-for="item in news"
             class="my-card text-white"
@@ -64,25 +78,40 @@
 import {ref} from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import CalendarComponent from "components/IndexComponents/CalendarComponent.vue";
+import ChartBarComponent from "components/Chart/ChartBarComponent.vue";
 import {getIndex} from "components/modules/getIndex";
 import {getWordCountByDate} from "components/modules/statistics/getWordCountByDate";
 import {getNewsWordDyDate} from "components/modules/statistics/getNewsWordDyDate";
-
 
 const word = ref('Trump')
 const loading = ref(false)
 const loadingNews = ref(false)
 let dateRange = ref({ from: new Date(Date.now()-86400000 * 9).toISOString().slice(0, 10) , to: new Date().toISOString().slice(0, 10) })
 let count = ref({})
-let news = ref({})
+let news = ref([])
+
+/////оси для статистики агентств
+let optionsX = ref([])
+let seriesY = ref([])
 
 const loadNews = async (word , date ) =>{
   if (!word || !date) return
   loadingNews.value = true
-  news.value = {}
+  news.value = []
   const {response} = await getNewsWordDyDate(date, word )
   news.value = response.value
   loadingNews.value = false
+  const agencyCounter = news.value.reduce((acc,item) =>{
+    if (acc[item.agency] === undefined) acc[item.agency] = 1
+    else acc[item.agency]  = acc[item.agency] + 1
+    return acc
+  },{})
+  optionsX.value.length = 0
+  seriesY.value.length = 0
+  for (let key in agencyCounter){
+    optionsX.value.push(key)
+    seriesY.value.push(agencyCounter[key])
+  }
 }
 
 const options =  ref({
@@ -126,9 +155,13 @@ const  getDatesArray = async (start, end) => {
 
 const  click = async ()=>{
   if (!loading.value) {
+    news.value = {}
     options.value.xaxis.categories.length = 0
     series.value[0].data.length = 0
     series.value[0].name = word.value
+
+    optionsX.value.length = 0
+    seriesY.value.length = 0
     await getDatesArray(dateRange.value.from, dateRange.value.to)
   }
   loading.value = false
