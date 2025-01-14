@@ -120,10 +120,8 @@ const options =  ref({
     height: 'auto',
     events: {
       click  (event, chartContext, opts){
-        if (event.detail === 2){
           if (opts.seriesIndex === -1 || opts.dataPointIndex === -1) return
           loadNews(opts.config.series[opts.seriesIndex].name, opts.config.xaxis.categories[opts.dataPointIndex])
-        }
       }
     }
   },
