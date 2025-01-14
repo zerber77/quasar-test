@@ -6,14 +6,12 @@
 <!--      </div>-->
 <!--    </div>-->
     <div class="row q-pa-md">
-
       <div class="col-12 col-md-4 q-pa-md">
               <q-input v-model="word" label="Слово для счета" />
               <CalendarComponent
                 @rangeSet = "setRange"
               />
       </div>
-
       <div class="col-12 col-md-8 q-pa-md">
               <q-btn :label="loading ? 'Остановить загрузку' : 'Посчитать'" color="primary" @click="click()" />
                <q-item>
@@ -29,6 +27,32 @@
                    </q-inner-loading>
                </q-item>
       </div>
+    </div>
+
+    <div class="col-12 q-pa-md " style="min-height: 100px">
+
+      <div class="q-pa-lg row q-gutter-md flex-center">
+        <q-inner-loading :showing="loadingNews">
+          <q-spinner-gears size="50px" color="primary" />
+        </q-inner-loading>
+          <q-card
+            v-for="item in news"
+            class="my-card text-white"
+            style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
+          >
+          <q-card-section>
+            <div class="text-h6">{{item.head}}</div>
+            <div class="text-subtitle2">{{item.agency}} - {{item.pubdate}}</div>
+
+
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            {{item.text}}
+            <div><a :href="item.link" target="_blank">Ссылка</a></div>
+          </q-card-section>
+        </q-card>
+      </div>
 
     </div>
 
@@ -42,20 +66,32 @@ import VueApexCharts from 'vue3-apexcharts'
 import CalendarComponent from "components/IndexComponents/CalendarComponent.vue";
 import {getIndex} from "components/modules/getIndex";
 import {getWordCountByDate} from "components/modules/statistics/getWordCountByDate";
+import {getNewsWordDyDate} from "components/modules/statistics/getNewsWordDyDate";
 
 
 const word = ref('Trump')
 const loading = ref(false)
+const loadingNews = ref(false)
 let dateRange = ref({ from: new Date(Date.now()-86400000 * 9).toISOString().slice(0, 10) , to: new Date().toISOString().slice(0, 10) })
 let count = ref({})
+let news = ref({})
+
+const loadNews = async (word , date ) =>{
+  if (!word || !date) return
+  loadingNews.value = true
+  news.value = {}
+  const {response} = await getNewsWordDyDate(date, word )
+  news.value = response.value
+  loadingNews.value = false
+}
 
 const options =  ref({
   chart: {
     id: 'vuechart-example',
     events: {
-      click(event, chartContext, opts) {
-        console.log(opts.config.series[opts.seriesIndex].name)
-        console.log(opts.config.xaxis.categories[opts.dataPointIndex])
+      click  (event, chartContext, opts){
+        if (opts.seriesIndex === -1 || opts.dataPointIndex === -1) return
+        loadNews(opts.config.series[opts.seriesIndex].name, opts.config.xaxis.categories[opts.dataPointIndex])
       }
     }
   },
@@ -102,13 +138,7 @@ function setRange (range) {
   dateRange.value.from =  range.from
   dateRange.value.to = range.to
 }
-//getDatesArray(dateRange.value.from, dateRange.value.to)
-//   .forEach(async (item)=>{
-//   const {response} = await getWordCountByDate(item, 'Trump')//   await axios.get('http://quasar-test/api/')
-//   count.value = response.value
-//   options.value.xaxis.categories.push(item)
-//   series.value[0].data.push(count.value)
-// })
+
 
 
 </script>
