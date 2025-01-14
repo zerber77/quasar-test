@@ -182,5 +182,4 @@ function setRange (range) {
   max-width: 250px
 .full
   width: 90%
-  min-height: 300px !important
 </style>

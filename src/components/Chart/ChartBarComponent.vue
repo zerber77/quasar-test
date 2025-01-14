@@ -41,5 +41,5 @@ series.value[0].data = seriesY
 
 <style lang="sass" scoped>
 .full
-  width: 80%
+  width: 90%
 </style>
