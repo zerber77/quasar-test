@@ -117,10 +117,13 @@ const loadNews = async (word , date ) =>{
 const options =  ref({
   chart: {
     id: 'vuechart-example',
+    height: 'auto',
     events: {
       click  (event, chartContext, opts){
-        if (opts.seriesIndex === -1 || opts.dataPointIndex === -1) return
-        loadNews(opts.config.series[opts.seriesIndex].name, opts.config.xaxis.categories[opts.dataPointIndex])
+        if (event.detail === 2){
+          if (opts.seriesIndex === -1 || opts.dataPointIndex === -1) return
+          loadNews(opts.config.series[opts.seriesIndex].name, opts.config.xaxis.categories[opts.dataPointIndex])
+        }
       }
     }
   },
