@@ -1,6 +1,15 @@
 <template>
   <q-page class="flex-center">
     <div class="col-12 q-pa-lg row flex-center">
+      <SelectAgencyComponent
+        v-model:selectedPerson = "agency"
+        :inputList = "agencies"
+      >
+
+      </SelectAgencyComponent>
+    </div>
+
+    <div class="col-12 q-pa-lg row flex-center">
       <q-pagination
         v-model="current"
         :max="agCount"
@@ -34,14 +43,17 @@
 <script>
 import {useRouter} from "vue-router";
 import {getLastNewsByAgency} from "components/modules/getLastNewsByAgency";
-import {onMounted, onUpdated, ref, watch} from "vue";
+import {computed, onMounted, onUpdated, ref, watch} from "vue";
 import {getCountByAgency} from "components/modules/getCountByAgency";
 import {getFirstNewsByAgency} from "components/modules/getFirstNewsByAgency";
 import {getLowerNews} from "components/modules/getLowerNews";
 import {getUpperNews} from "components/modules/getUpperNews";
+import {getAgencies} from "components/modules/getAgencies";
+import SelectAgencyComponent from "components/NewsComponent/SelectAgencyComponent.vue";
 
 export default {
   name: "NewsPage",
+  components: {SelectAgencyComponent},
   props: {
     // ag: {
     //   type: String,
@@ -49,13 +61,30 @@ export default {
     // },
   },
   setup(props){
-    const router = useRouter()
  //   let agency = ref(router.currentRoute.value.query)
-    let agency = ref('rt')
+    let agency = ref({})
     let agNews = ref({})
     let agCount = ref(0)
     let current = ref(agCount.value)
     const NEWS_PER_PAGE = 5
+
+    let agencies = ref([])
+    onMounted(async ()=>{
+      const {response} = await  getAgencies()
+      for (let i = 0; i < response.value.length; ++i)
+        agencies.value.push({'id': i,'name':  response.value[i].agency})
+      console.log('ag',agencies.value)
+      agency.value = agencies.value[0]
+    })
+
+    //////отслеживаем выбор персоны в селекте searchPersonComponent
+    watch(() => agency, () => {
+        console.log('watch',agency.value)
+        getCountAg(agency.value.name)
+//        getLastNews(agency.value.name)
+      },
+      {deep: true,}
+    );
 
 ///////////////////////////////////////////////////////////////////////
     async function getLastNews(ag){
@@ -85,37 +114,36 @@ export default {
     }
 
 ///////////////////////////////////////////////////////////////////////
-    onMounted(()=>{
- //     agency.value = router.currentRoute.value.query.ag
-      getCountAg(agency.value)
-      getLastNews(agency.value)
-    })
-    onUpdated(()=>{
- //     agency.value = router.currentRoute.value.query.ag
-      getCountAg(agency.value)
-      getLastNews(agency.value)
-    })
+//     onMounted(()=>{
+//  //     agency.value = router.currentRoute.value.query.ag
+//       getCountAg(agency.value)
+//       getLastNews(agency.value)
+//     })
+//     onUpdated(()=>{
+//       getCountAg(agency.value.name)
+//       getLastNews(agency.value.name)
+//     })
 
 /////////////////////////////////////////////////////////////////////////
     watch((current),(newVal,oldVal)=>{
       console.log(current.value, oldVal)
       if(current.value === 1 ){
-        getFirstNews(agency.value)
+        getFirstNews(agency.value.name)
       }
       else if(current.value === agCount.value){
-        getLastNews(agency.value)
+        getLastNews(agency.value.name)
       }
       else if(current.value < oldVal){
-        getLNews(agency.value,agNews.value[0].id - NEWS_PER_PAGE + 1)
+        getLNews(agency.value.name,agNews.value[0].id - NEWS_PER_PAGE + 1)
       }
       else if(current.value > oldVal){
-        getUNews(agency.value,agNews.value[NEWS_PER_PAGE-1].id)
+        getUNews(agency.value.name,agNews.value[NEWS_PER_PAGE-1].id)
       }
     })
 
     return{
       agency,agNews,agCount,
-      current,
+      current, agencies,
       paginateNews(val){
         console.log(current.value)
       }

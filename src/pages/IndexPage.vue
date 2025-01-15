@@ -33,9 +33,7 @@
       </div>
     </div>
 
-    <div class="row q-pa-md">
-<!--      <pre>{{optionsX}}</pre>-->
-<!--      <pre>{{seriesY}}</pre>-->
+    <div v-if="optionsX.length" class="row q-pa-md">
         <div class="col-12 col-md-4 q-pa-md" style="min-height: 300px !important;">
           <ChartBarComponent
             :optionsX = "optionsX"
@@ -43,7 +41,6 @@
           />
         </div>
     </div>
-
 
     <div class="col-12 q-pa-md " style="min-height: 200px">
 
@@ -61,8 +58,6 @@
           <q-card-section>
             <div class="text-h6">{{item.head}}</div>
             <div class="text-subtitle2">{{item.agency}} - {{item.pubdate}}</div>
-
-
           </q-card-section>
 
           <q-card-section class="q-pt-none">
