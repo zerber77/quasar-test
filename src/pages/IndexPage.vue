@@ -7,7 +7,11 @@
 <!--    </div>-->
     <div class="row q-pa-md">
       <div class="col-12 col-md-4 q-pa-md">
-              <q-input v-model="word" label="Слово для счета" />
+              <q-input
+                v-model="word"
+                label="Слово для счета"
+                :input-style="{ fontSize: '26px' }"
+              />
               <CalendarComponent
                 @rangeSet = "setRange"
               />

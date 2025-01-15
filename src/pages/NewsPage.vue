@@ -11,7 +11,7 @@
       />
     </div>
 <!--flex-center items-start-->
-    <div class="q-pa-lg row q-gutter-md ">
+    <div class="q-pa-lg row q-gutter-md flex-center">
       <q-card
         v-for="item in agNews"
         class="my-card text-white"
@@ -50,7 +50,8 @@ export default {
   },
   setup(props){
     const router = useRouter()
-    let agency = ref(router.currentRoute.value.query)
+ //   let agency = ref(router.currentRoute.value.query)
+    let agency = ref('rt')
     let agNews = ref({})
     let agCount = ref(0)
     let current = ref(agCount.value)
@@ -85,12 +86,12 @@ export default {
 
 ///////////////////////////////////////////////////////////////////////
     onMounted(()=>{
-      agency.value = router.currentRoute.value.query.ag
+ //     agency.value = router.currentRoute.value.query.ag
       getCountAg(agency.value)
       getLastNews(agency.value)
     })
     onUpdated(()=>{
-      agency.value = router.currentRoute.value.query.ag
+ //     agency.value = router.currentRoute.value.query.ag
       getCountAg(agency.value)
       getLastNews(agency.value)
     })
