@@ -18,17 +18,46 @@ const props = defineProps({
   optionsX: Array,
   seriesY: Array
 });
+const emit = defineEmits(['selected'])
 
 const options =  ref({
   chart: {
-    id: 'vuechart',
+    id: 'vuechart1',
+    height: 'auto',
+    events: {
+      click  (event, chartContext, opts){
+        if (opts.seriesIndex === -1 || opts.dataPointIndex === -1)  emit('selected','')
+        emit('selected', options.value.xaxis.categories[opts.dataPointIndex])
+      }
+    }
   },
   xaxis: {
-    categories: []
+    categories: [],
+    crosshairs: {
+      fill: {
+        type: 'gradient',
+        gradient: {
+          colorFrom: '#D8E3F0',
+          colorTo: '#BED1E6',
+          stops: [0, 100],
+          opacityFrom: 0.4,
+          opacityTo: 0.5,
+        }
+      }
+    },
+    tooltip: {
+      enabled: true,
+    },
+  },
+
+  plotOptions: {
+    bar: {
+      borderRadius: 10,
+    }
   },
 })
 const series = ref([{
-  name: '111',
+  name: '',
   data: []
 }])
 
@@ -41,5 +70,5 @@ series.value[0].data = seriesY
 
 <style lang="sass" scoped>
 .full
-  width: 90%
+  width: 100%
 </style>

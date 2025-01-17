@@ -17,7 +17,7 @@ session_set_cookie_params(3600*24*3);
 session_start();
 
 include("../../const.php");
-$result = mysqli_query($dbcnx, "SELECT COUNT(*) FROM mynews WHERE time_new LIKE '$date%' && text LIKE '%$word%'");//
+$result = mysqli_query($dbcnx, "SELECT COUNT(*) FROM mynews WHERE time_new LIKE '$date%' AND (text LIKE '%$word%' OR head LIKE '%$word%')");//
 
 $count = mysqli_fetch_array($result);
 //echo $word;

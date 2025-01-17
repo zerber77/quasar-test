@@ -6,7 +6,7 @@
 <!--      </div>-->
 <!--    </div>-->
     <div class="row q-pa-md">
-      <div class="col-12 col-md-4 q-pa-md">
+      <div class="col-12 col-md-4">
               <q-input
                 v-model="word"
                 label="Слово для счета"
@@ -16,7 +16,7 @@
                 @rangeSet = "setRange"
               />
       </div>
-      <div class="col-12 col-md-8">
+      <div class="col-12 col-md-8 text-center">
               <q-btn :label="loading ? 'Остановить загрузку' : 'Посчитать'" color="primary" @click="click()" />
                <q-item>
                   <VueApexCharts
@@ -25,25 +25,29 @@
                      :series="series"
                      class="full"
                    >
+
                    </VueApexCharts>
                    <q-inner-loading :showing="loading">
                      <q-spinner-gears size="50px" color="primary" />
                    </q-inner-loading>
                </q-item>
+        <div v-if="options.xaxis.categories.length" class="title">Количество упоминаний слова {{word}} в новостях</div>
       </div>
     </div>
 
-    <div v-if="optionsX.length" class="row q-pa-md">
-        <div class="col-12 col-md-4 q-pa-md" style="min-height: 300px !important;">
+    <div v-if="optionsX.length" class="row">
+        <div class="col-12 col-md-4 text-center" style="min-height: 300px !important;">
           <ChartBarComponent
             :optionsX = "optionsX"
             :seriesY = "seriesY"
+            @selected = filterAgencies
           />
+          <div v-if="optionsX.length" class="title">Количество упоминаний слова {{word}} по агентствам</div>
         </div>
+
     </div>
 
     <div class="col-12 q-pa-md " style="min-height: 200px">
-
       <div class="q-pa-lg row q-gutter-md flex-center">
         <q-item>
             <q-inner-loading :showing="loadingNews">
@@ -51,7 +55,8 @@
             </q-inner-loading>
         </q-item>
           <q-card
-            v-for="item in news"
+            v-if="optionsX.length"
+            v-for="item in filteredNews"
             class="my-card text-white"
             style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
           >
@@ -62,7 +67,7 @@
 
           <q-card-section class="q-pt-none">
             {{item.text}}
-            <div><a :href="item.link" target="_blank">Ссылка</a></div>
+            <div><a :href="item.link" target="_blank" style="color: yellow">Ссылка</a></div>
           </q-card-section>
         </q-card>
       </div>
@@ -88,6 +93,7 @@ const loadingNews = ref(false)
 let dateRange = ref({ from: new Date(Date.now()-86400000 * 9).toISOString().slice(0, 10) , to: new Date().toISOString().slice(0, 10) })
 let count = ref({})
 let news = ref([])
+let filteredNews = ref([])
 
 /////оси для статистики агентств
 let optionsX = ref([])
@@ -97,16 +103,17 @@ const loadNews = async (word , date ) =>{
   if (!word || !date) return
   loadingNews.value = true
   news.value = []
+  optionsX.value.length = 0
+  seriesY.value.length = 0
   const {response} = await getNewsWordDyDate(date, word )
   news.value = response.value
+  filteredNews.value = news.value
   loadingNews.value = false
   const agencyCounter = news.value.reduce((acc,item) =>{
     if (acc[item.agency] === undefined) acc[item.agency] = 1
     else acc[item.agency]  = acc[item.agency] + 1
     return acc
   },{})
-  optionsX.value.length = 0
-  seriesY.value.length = 0
   for (let key in agencyCounter){
     optionsX.value.push(key)
     seriesY.value.push(agencyCounter[key])
@@ -125,7 +132,31 @@ const options =  ref({
     }
   },
   xaxis: {
-    categories: []
+    categories: [],
+    axisTicks: {
+      show: false
+    },
+    crosshairs: {
+      fill: {
+        type: 'gradient',
+        gradient: {
+          colorFrom: '#D8E3F0',
+          colorTo: '#BED1E6',
+          stops: [0, 100],
+          opacityFrom: 0.4,
+          opacityTo: 0.5,
+        }
+      }
+    },
+    tooltip: {
+      enabled: true,
+    }
+
+  },
+  plotOptions: {
+    bar: {
+      borderRadius: 20,
+    }
   },
 })
 const series = ref([{
@@ -162,7 +193,9 @@ const  click = async ()=>{
 
     optionsX.value.length = 0
     seriesY.value.length = 0
+
     await getDatesArray(dateRange.value.from, dateRange.value.to)
+
   }
   loading.value = false
 }
@@ -170,6 +203,14 @@ const  click = async ()=>{
 function setRange (range) {
   dateRange.value.from =  range.from
   dateRange.value.to = range.to
+}
+
+const filterAgencies = (agency) => {
+  if (!agency) {
+    filteredNews.value = news.value
+    return
+  }
+  filteredNews.value = news.value.filter((item) => item.agency === agency)
 }
 
 
@@ -182,4 +223,9 @@ function setRange (range) {
   max-width: 250px
 .full
   width: 90%
+.title
+  font-size: 1.5em
+  font-weight: bold
+  color: #2669a1
+
 </style>
