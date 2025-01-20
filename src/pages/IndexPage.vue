@@ -14,16 +14,23 @@
               />
               <CalendarComponent
                 @rangeSet = "setRange"
+                @rangeStart = "rangeStart"
               />
       </div>
       <div class="col-12 col-md-8 text-center">
-              <q-btn :label="loading ? 'Остановить загрузку' : 'Посчитать'" color="primary" @click="click()" />
+              <q-btn
+                v-if = "calcButton"
+                :label="loading ? 'Остановить загрузку' : 'Посчитать'"
+                color="primary"
+                @click="click()"
+              />
                <q-item>
                   <VueApexCharts
                      type="bar"
                      :options="options"
                      :series="series"
                      class="full"
+                     height="400"
                    >
 
                    </VueApexCharts>
@@ -88,6 +95,7 @@ import {getWordCountByDate} from "components/modules/statistics/getWordCountByDa
 import {getNewsWordDyDate} from "components/modules/statistics/getNewsWordDyDate";
 
 const word = ref('Trump')
+const calcButton = ref(true)
 const loading = ref(false)
 const loadingNews = ref(false)
 let dateRange = ref({ from: new Date(Date.now()-86400000 * 9).toISOString().slice(0, 10) , to: new Date().toISOString().slice(0, 10) })
@@ -120,10 +128,11 @@ const loadNews = async (word , date ) =>{
   }
 }
 
+///////////////////////////////////////////// настройки графика
 const options =  ref({
   chart: {
     id: 'vuechart-example',
-    height: 'auto',
+    height: '500',
     events: {
       click  (event, chartContext, opts){
           if (opts.seriesIndex === -1 || opts.dataPointIndex === -1) return
@@ -155,7 +164,7 @@ const options =  ref({
   },
   plotOptions: {
     bar: {
-      borderRadius: 20,
+      borderRadius: 10,
     }
   },
 })
@@ -163,7 +172,7 @@ const series = ref([{
   name: word.value,
   data: []
 }])
-
+///////////////////////////////////////////////////
 
 const  getDatesArray = async (start, end) => {
   const arr = [];
@@ -195,14 +204,21 @@ const  click = async ()=>{
     seriesY.value.length = 0
 
     await getDatesArray(dateRange.value.from, dateRange.value.to)
-
   }
   loading.value = false
 }
 
 function setRange (range) {
+  calcButton.value = true
+  if (typeof range === 'string') {
+    dateRange.value.from = dateRange.value.to = range ///ыбрана одна дата
+    return
+  }
   dateRange.value.from =  range.from
   dateRange.value.to = range.to
+}
+const rangeStart = () =>{
+  calcButton.value = false
 }
 
 const filterAgencies = (agency) => {
@@ -223,9 +239,12 @@ const filterAgencies = (agency) => {
   max-width: 250px
 .full
   width: 90%
+
 .title
   font-size: 1.5em
   font-weight: bold
   color: #2669a1
-
+.chart
+  min-height: 300px !important
+  max-height: 500px !important
 </style>

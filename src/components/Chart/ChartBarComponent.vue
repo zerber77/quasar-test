@@ -4,6 +4,7 @@
       type="bar"
       :options="options"
       :series="series"
+      height="300"
       class="full"
     >
     </VueApexCharts>

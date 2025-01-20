@@ -8,6 +8,7 @@
       dark
       bordered
       style="height: 390px"
+      @range-start = "emit('rangeStart')"
       @range-end = setRange()
     />
 <!--    <q-item>{{dateRange}}</q-item>-->
@@ -16,7 +17,7 @@
 
 <script setup>
 import {ref} from "vue";
-const emit = defineEmits(['rangeSet'])
+const emit = defineEmits(['rangeSet', 'rangeStart'])
 let dateRange = ref({ from: new Date(Date.now()-86400000 * 9).toISOString().slice(0, 10) , to: new Date().toISOString().slice(0, 10) })
 const myLocale = ref ({
   days: 'Воскресенье_Понедельник_Вторник_Среда_Четверг_Пятница_Суббота'.split('_'),
