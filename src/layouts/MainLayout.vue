@@ -92,6 +92,12 @@ const linksList = [
     icon: 'forum',
     link: '/NewsPage/'
   },
+  {
+    title: 'О ПРОЕКТЕ',
+    caption: '',
+    icon: 'star',
+    link: '/AboutPage/'
+  },
 
 ]
 
