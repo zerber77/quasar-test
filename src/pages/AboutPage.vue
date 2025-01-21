@@ -47,7 +47,7 @@ const cardOptions = ref([
   {
     title:'Мировые новости, статистика и анализ',
     description:'Краткое описание проекта',
-    image:'/icons/favicon-32x32.png',
+    image:'../src/assets/images/favicon-32x32.png',
     style:'height: 100px; max-width: 100px',
     path:'',
     text:'Проект создан с помощью javascript-фреймворка Quasar (Vue3).\n' +
