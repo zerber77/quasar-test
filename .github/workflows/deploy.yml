@@ -20,7 +20,7 @@ jobs:
       - name: Copy api
         run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
       - name: mkdir
-        run: sudo mkdir /home/runner/work/quasar-test/quasar-test/dist/spa/src
+        run: sudo mkdir /home/runner/work/quasar-test/quasar-test/dist/spa/src/assets
       - name: Copy images
         run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/src/assets/images /home/runner/work/quasar-test/quasar-test/dist/spa/src/assets/images/
       - name: Copy folder content recursively to remote
