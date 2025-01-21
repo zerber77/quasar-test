@@ -26,7 +26,7 @@ jobs:
       - name: mkdir images
         run: sudo mkdir /home/runner/work/quasar-test/quasar-test/dist/spa/src/assets/images
       - name: Copy images
-        run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/src/assets/images /home/runner/work/quasar-test/quasar-test/dist/spa/src/assets/images/
+        run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/src/assets/images /home/runner/work/quasar-test/quasar-test/dist/spa/src/assets/
       - name: Copy folder content recursively to remote
         uses: garygrossgarten/github-action-scp@release
         with:
