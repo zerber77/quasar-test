@@ -7,6 +7,7 @@ axios-запросы делаем к этому серверу, например
  extendViteConf (viteConf, { isClient, isServer }) {
         viteConf.base = '/testspa/spa/';
       },
+publicPath: '/spa/',
 
 Заменить для axios const res = await axios.get('/testspa/spa/'+url)
 
