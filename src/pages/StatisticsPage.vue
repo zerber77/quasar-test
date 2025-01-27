@@ -13,8 +13,10 @@
                 :input-style="{ fontSize: '26px' }"
               />
               <CalendarComponent
+                :range = "true"
                 @rangeSet = "setRange"
                 @rangeStart = "rangeStart"
+                @update = "dateSet"
               />
       </div>
       <div class="col-12 col-md-8 text-center">
@@ -209,6 +211,7 @@ const  click = async ()=>{
 }
 
 function setRange (range) {
+  console.log('setRange')
   calcButton.value = true
   if (typeof range === 'string') {
     dateRange.value.from = dateRange.value.to = range ///ыбрана одна дата
@@ -218,9 +221,12 @@ function setRange (range) {
   dateRange.value.to = range.to
 }
 const rangeStart = () =>{
+  console.log('rangeStart')
   calcButton.value = false
 }
-
+const dateSet = (date) =>{
+  console.log('dateSet', date)
+}
 const filterAgencies = (agency) => {
   if (!agency) {
     filteredNews.value = news.value

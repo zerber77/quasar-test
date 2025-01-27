@@ -84,7 +84,7 @@ const linksList = [
     title: 'СТАТИСТИКА',
     caption: 'github.com/quasarframework',
     icon: 'list',
-    link: '/'
+    link: '/StatisticsPage/'
   },
   {
     title: 'НОВОСТИ',
@@ -96,7 +96,7 @@ const linksList = [
     title: 'О ПРОЕКТЕ',
     caption: '',
     icon: 'star',
-    link: '/AboutPage/'
+    link: '/'
   },
 
 ]

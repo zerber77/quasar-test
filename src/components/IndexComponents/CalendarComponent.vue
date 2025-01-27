@@ -2,7 +2,7 @@
   <div class="row q-pa-md">
     <q-date
       v-model="dateRange"
-      range
+      :range = props.range
       :locale="myLocale"
       mask="YYYY-MM-DD"
       dark
@@ -10,6 +10,7 @@
       style="height: 390px"
       @range-start = "emit('rangeStart')"
       @range-end = setRange()
+      @update:model-value = "emit('update', dateRange)"
     />
 <!--    <q-item>{{dateRange}}</q-item>-->
   </div>
@@ -17,8 +18,13 @@
 
 <script setup>
 import {ref} from "vue";
-const emit = defineEmits(['rangeSet', 'rangeStart'])
-let dateRange = ref({ from: new Date(Date.now()-86400000 * 9).toISOString().slice(0, 10) , to: new Date().toISOString().slice(0, 10) })
+const props = defineProps({
+  range: Boolean
+})
+const emit = defineEmits(['rangeSet', 'rangeStart', 'update'])
+let dateRange = ref({})
+if (props.range) dateRange.value = { from: new Date(Date.now()-86400000 * 9).toISOString().slice(0, 10) , to: new Date().toISOString().slice(0, 10) }
+else dateRange.value = new Date().toISOString().slice(0, 10)
 const myLocale = ref ({
   days: 'Воскресенье_Понедельник_Вторник_Среда_Четверг_Пятница_Суббота'.split('_'),
     daysShort: 'ВС_ПН_ВТ_СР_ЧТ_ПТ_СБ'.split('_'),
