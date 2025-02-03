@@ -62,7 +62,7 @@ module.exports = configure(function (/* ctx */) {
       extendViteConf (viteConf, { isClient, isServer }) {
         viteConf.base = '/spa/'; // <=== add this line
       },
-      publicPath: '/spa/',
+      //publicPath: '/spa/',
       // analyze: true,
       // env: {},
       // rawDefine: {}
