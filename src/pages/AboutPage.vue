@@ -47,7 +47,7 @@ const cardOptions = ref([
   {
     title:'Мировые новости, статистика и анализ',
     description:'Краткое описание проекта',
-    image:'../src/assets/images/favicon-32x32.png',
+    image:'./src/assets/images/favicon-32x32.png',
     style:'height: 100px; max-width: 100px',
     path:'',
     text:'Проект создан с помощью javascript-фреймворка Quasar (Vue3).\n' +
@@ -58,7 +58,7 @@ const cardOptions = ref([
   {
     title:'СТАТИСТИКА',
     description:'Статистика встречаемости слов в новостях.',
-    image:'../src/assets/images/vuechart-example.png',
+    image:'./src/assets/images/vuechart-example.png',
     style:'height: 130px; max-width: 200px',
     path:'/StatisticsPage/',
     text:'В этом разделе вы можете задать слово, частоту встречаемости которого необходимо посчитать в новостях за определенный промежкток времени. \n' +
@@ -67,7 +67,7 @@ const cardOptions = ref([
   {
     title:'НОВОСТИ',
     description:' Просмотр новостей с 2019 года по текущее время. ',
-    image:'../src/assets/images/news.jpg',
+    image:'./src/assets/images/news.jpg',
     style:'',
     path:'/NewsPage/',
     text:'На данной странице отображаются все новости с сортировкой по агентствам и дате.'
