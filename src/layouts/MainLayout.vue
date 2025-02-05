@@ -81,6 +81,12 @@ import { useRouter } from 'vue-router';
 
 const linksList = [
   {
+    title: 'СЕГОДНЯ В НОВОСТЯХ',
+    caption: '',
+    icon: 'today',
+    link: '/TagsPage/'
+  },
+  {
     title: 'СТАТИСТИКА',
     caption: 'github.com/quasarframework',
     icon: 'list',
