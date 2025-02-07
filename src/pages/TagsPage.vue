@@ -63,7 +63,7 @@ const options = ref({
     breakpoint: 480,
     options: {
       chart: {
-        width: 500
+        width: 300
       },
       legend: {
         position: 'bottom'
@@ -82,7 +82,7 @@ const options_ru = ref({
     breakpoint: 480,
     options: {
       chart: {
-        width: 500
+        width: 300
       },
       legend: {
         position: 'bottom'
@@ -94,7 +94,7 @@ const options_ru = ref({
 const  series = ref([])
 const  series_ru = ref([])
 const loading = ref(false)
-
+let russian, english
 // Функция для проверки, является ли слово английским
 function isEnglish(word) {
   return /^[A-Za-z]+$/.test(word); // Регулярное выражение для английских букв
@@ -110,15 +110,15 @@ const clearCharts = () =>{
   series_ru.value.length = 0
 }
 
-// Функция реобразования по языкам и передача на графику
+// Функция преобразования по языкам и передача на графику
 const wordsArrayTransform = (arr) =>{
   clearCharts()
-  let english = arr.filter(item => isEnglish(item.word));
+  english = arr.filter(item => isEnglish(item.word));
   english.forEach((item) => {
     options.value.labels.push(item.word)
     series.value.push(Number(item.frequency))
   })
-  let russian = arr.filter(item => isRussian(item.word));
+  russian = arr.filter(item => isRussian(item.word));
   // let result = russian.reduce((acc, obj) => {
   //   debugger
   //   let word = Object.keys(obj)[0]; // Получаем ключ (слово)
