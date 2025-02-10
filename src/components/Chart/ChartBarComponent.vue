@@ -4,7 +4,7 @@
       type="bar"
       :options="options"
       :series="series"
-      height="300"
+      :height=props.height
       class="full"
     >
     </VueApexCharts>
@@ -17,7 +17,8 @@ import VueApexCharts from 'vue3-apexcharts'
 
 const props = defineProps({
   optionsX: Array,
-  seriesY: Array
+  seriesY: Array,
+  height: Number
 });
 const emit = defineEmits(['selected'])
 

@@ -53,7 +53,6 @@
           />
           <div v-if="optionsX.length" class="title">Количество упоминаний слова {{word}} по агентствам</div>
         </div>
-
     </div>
 
     <div class="col-12 q-pa-md " style="min-height: 200px">
