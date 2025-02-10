@@ -32,7 +32,8 @@
         </q-item>
        </div>
     </div>
-    <div class="col-12 q-pa-lg row flex-center">
+
+    <div v-if="news.length" class="col-12 q-pa-lg row flex-center">
       <q-pagination
         v-model="current"
         :max="agCount"
@@ -43,7 +44,7 @@
       />
     </div>
 <!--flex-center items-start-->
-    <div class="q-pa-lg row q-gutter-md flex-center">
+    <div v-if="news.length" class="q-pa-lg row q-gutter-md flex-center">
       <q-card
         v-for="item in agNewsPaginated"
         class="my-card text-white"
@@ -134,11 +135,9 @@ export default {
       else {
 
       }
-      loading.value = false
-      // for (let i = 0; i < response.value.length; ++i)
-      //   agencies.value.push({'id': i,'name':  response.value[i].agency})
-      // console.log('ag',agencies.value)
-      // agency.value = agencies.value[0]
+      agNewsFiltered.value = news.value
+      setPaginationData()
+
     })
 
     //////отслеживаем выбор персоны в селекте searchPersonComponent
@@ -188,6 +187,13 @@ export default {
 //     })
 
 /////////////////////////////////////////////////////////////////////////
+   const setPaginationData = () =>{
+      agCount.value = Math.ceil(agNewsFiltered.value.length/NEWS_PER_PAGE)
+      current.value = agCount.value
+      agNewsPaginated.value = agNewsFiltered.value.slice(-NEWS_PER_PAGE)
+      loading.value = false
+    }
+
     watch((current),(newVal,oldVal)=>{
       agNewsPaginated.value = agNewsFiltered.value.slice(current.value * NEWS_PER_PAGE-NEWS_PER_PAGE, current.value * NEWS_PER_PAGE)
     })
@@ -196,25 +202,28 @@ export default {
       news, agCount, agNewsFiltered,agNewsPaginated,
       current, agencies,optionsX,seriesY,
       loading,
+      setPaginationData,
       paginateNews(val){
         console.log(current.value)
       },
+
       async dateChanged (date)  {
+        news.value.length = 0
         optionsX.value.length = 0
         seriesY.value.length = 0
         loading.value = true
         const {response} = await  getAllNewsByDate(date)
         news.value = response.value
         countAgencies(news)
-        loading.value = false
+        agNewsFiltered.value = news.value
+        setPaginationData()
       },
+
       filterAgencies(agency){
         if (!agency) agNewsFiltered.value = news.value
         else agNewsFiltered.value = news.value.filter((item) => item.agency === agency)
+        setPaginationData()
 
-        agCount.value = Math.ceil(agNewsFiltered.value.length/NEWS_PER_PAGE)
-        current.value = agCount.value
-        agNewsPaginated.value = agNewsFiltered.value.slice(-NEWS_PER_PAGE)
       }
     }
   }
