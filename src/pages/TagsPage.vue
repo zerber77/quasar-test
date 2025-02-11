@@ -44,6 +44,33 @@
         </q-item>
       </div>
     </div>
+<!--новости-->
+    <div class="col-12 q-pa-md " style="min-height: 200px">
+      <div class="q-pa-lg row q-gutter-md flex-center">
+        <q-item>
+          <q-inner-loading :showing="loadingNews">
+            <q-spinner-gears size="50px" color="primary" />
+          </q-inner-loading>
+        </q-item>
+        <q-card
+          v-if="news.length"
+          v-for="item in news"
+          class="my-card text-white"
+          style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
+        >
+          <q-card-section>
+            <div class="text-h6">{{item.head}}</div>
+            <div class="text-subtitle2">{{item.agency}} - {{item.pubdate}}</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            {{item.text}}
+            <div><a :href="item.link" target="_blank" style="color: yellow">Ссылка</a></div>
+          </q-card-section>
+        </q-card>
+      </div>
+
+    </div>
 
   </q-page>
 </template>
@@ -53,10 +80,17 @@ import {onMounted, ref} from "vue";
 import VueApexCharts from 'vue3-apexcharts'
 import CalendarComponent from "components/IndexComponents/CalendarComponent.vue";
 import {getWordOfDay} from "components/modules/wordofday/getWordOfDay";
+import {getNewsWordDyDate} from "components/modules/statistics/getNewsWordDyDate";
 const options = ref({
   chart: {
     width: 580,
     type: 'pie',
+    events: {
+      click  (event, chartContext, opts){
+        if (opts.dataPointIndex === -1) return
+        loadNews(opts.config.labels[opts.dataPointIndex])
+      }
+    }
   },
   labels: [],
   responsive: [{
@@ -76,6 +110,12 @@ const options_ru = ref({
   chart: {
     width: 580,
     type: 'pie',
+    events: {
+      click  (event, chartContext, opts){
+        if (opts.dataPointIndex === -1) return
+        loadNews(opts.config.labels[opts.dataPointIndex])
+      }
+    }
   },
   labels: [],
   responsive: [{
@@ -94,7 +134,10 @@ const options_ru = ref({
 const  series = ref([])
 const  series_ru = ref([])
 const loading = ref(false)
+const loadingNews = ref(false)
+const news = ref([])
 let russian, english
+let selectedDate = ref(new Date().toISOString().slice(0, 10))
 // Функция для проверки, является ли слово английским
 function isEnglish(word) {
   return /^[A-Za-z]+$/.test(word); // Регулярное выражение для английских букв
@@ -142,18 +185,27 @@ const wordsArrayTransform = (arr) =>{
 }
 
 onMounted(async ()=>{
-  const {response} = await  getWordOfDay(new Date().toISOString().slice(0, 10))
+  const {response} = await  getWordOfDay(selectedDate.value)
   const data = response.value
   wordsArrayTransform(data)
 
 })
 
 const dateChanged = async (date) => {
+  selectedDate.value = date
   const {response} = await  getWordOfDay(date)
   const data = response.value
   wordsArrayTransform(data)
 }
 
+const loadNews = async (word ) =>{
+  if (!word || !selectedDate.value) return
+  loadingNews.value = true
+  news.value.length = 0
+  const {response} = await getNewsWordDyDate(selectedDate.value, word )
+  news.value = response.value
+  loadingNews.value = false
+}
 </script>
 
 <style lang="sass" scoped>
