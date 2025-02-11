@@ -1,8 +1,8 @@
 
 import {useGet} from "../axiosGet";
 
-export async function getNewsWordDyDate(date,word){
-  const {response, request} = useGet('api/statistics/getNewsWordDyDate/?date='+date+'&word='+word,{},false)
+export async function getNewsWordDyDate(date,word, strong = false){
+  const {response, request} = useGet('api/statistics/getNewsWordDyDate/?date='+date+'&word='+word+'&strong='+strong ,{},false)
   try {
     await request()
   }catch (e) {

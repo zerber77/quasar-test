@@ -202,7 +202,7 @@ const loadNews = async (word ) =>{
   if (!word || !selectedDate.value) return
   loadingNews.value = true
   news.value.length = 0
-  const {response} = await getNewsWordDyDate(selectedDate.value, word )
+  const {response} = await getNewsWordDyDate(selectedDate.value, word,true)
   news.value = response.value
   loadingNews.value = false
 }
