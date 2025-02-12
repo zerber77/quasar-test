@@ -114,8 +114,9 @@ const loadNews = async (word , date ) =>{
   news.value = []
   optionsX.value.length = 0
   seriesY.value.length = 0
-  const {response} = await getNewsWordDyDate(date, word )
+  const {response} = await getNewsWordDyDate(date, word)
   news.value = response.value
+  console.log('news',news.value)
   filteredNews.value = news.value
   loadingNews.value = false
   const agencyCounter = news.value.reduce((acc,item) =>{
@@ -203,7 +204,6 @@ const  click = async ()=>{
 
     optionsX.value.length = 0
     seriesY.value.length = 0
-
     await getDatesArray(dateRange.value.from, dateRange.value.to)
   }
   loading.value = false
