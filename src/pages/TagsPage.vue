@@ -163,6 +163,7 @@ const clearCharts = () =>{
   series.value.length = 0
   options_ru.value.labels.length = 0
   series_ru.value.length = 0
+  news.value.length = 0
 }
 
 // Функция преобразования по языкам и передача на графику
@@ -214,6 +215,7 @@ const dateChanged = async (date) => {
     errorMessage.value = `Дата не выбрана`
     return
   }
+  clearCharts()
   const {response} = await  getWordOfDay(date)
   const data = response.value
   if (!data.length) {
