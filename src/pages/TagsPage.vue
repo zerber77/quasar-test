@@ -48,9 +48,9 @@
       </div>
     </div>
 <!--новости-->
-    <div class="col-12 q-pa-md " style="min-height: 200px">
+    <div class="col-12 q-pa-md flex-center" style="min-height: 200px">
       <h3 v-if="news.length" class="title">Новости со словом {{word}}. Дата {{selectedDate}}</h3>
-      <div class="q-pa-lg row q-gutter-md flex-center">
+      <div class="q-pa-lg row q-gutter-md">
         <q-item>
           <q-inner-loading :showing="loadingNews">
             <q-spinner-gears size="50px" color="primary" />
