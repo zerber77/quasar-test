@@ -18,20 +18,22 @@ jobs:
 #      - name: Create bd connection
 #        run: echo "${{ secrets.BD_CONNECTION }}" > /home/runner/work/quasar-test/quasar-test/api/const.php
       - name: Copy api
-        run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
+        run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/
+#        run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/api /home/runner/work/quasar-test/quasar-test/dist/spa/
       - name: mkdir src
-        run: sudo mkdir /home/runner/work/quasar-test/quasar-test/dist/spa/src
+        run: sudo mkdir /home/runner/work/quasar-test/quasar-test/dist/src
       - name: mkdir assets
-        run: sudo mkdir /home/runner/work/quasar-test/quasar-test/dist/spa/src/assets
+        run: sudo mkdir /home/runner/work/quasar-test/quasar-test/dist/src/assets
       - name: mkdir images
-        run: sudo mkdir /home/runner/work/quasar-test/quasar-test/dist/spa/src/assets/images
+        run: sudo mkdir /home/runner/work/quasar-test/quasar-test/dist/src/assets/images
       - name: Copy images
-        run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/src/assets/images /home/runner/work/quasar-test/quasar-test/dist/spa/src/assets/
+        run: sudo cp -rf /home/runner/work/quasar-test/quasar-test/src/assets/images /home/runner/work/quasar-test/quasar-test/dist/src/assets/
       - name: Copy folder content recursively to remote
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: /home/runner/work/quasar-test/quasar-test/dist/spa
-          remote: www/xn---57-qdd4aqo.xn--p1ai/spa
+          local: /home/runner/work/quasar-test/quasar-test/dist
+          remote: www/ news-analitika.ru
+#          remote: www/xn---57-qdd4aqo.xn--p1ai/spa    news-analitika.ru
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.PASSWORD }}

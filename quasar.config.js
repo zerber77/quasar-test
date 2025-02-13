@@ -59,9 +59,9 @@ module.exports = configure(function (/* ctx */) {
       // vueOptionsAPI: false,
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      extendViteConf (viteConf, { isClient, isServer }) {
-        viteConf.base = '/spa/'; // <=== add this line
-      },
+      // extendViteConf (viteConf, { isClient, isServer }) {
+      //   viteConf.base = '/spa/'; // <=== add this line
+      // },
       //publicPath: '/spa/',
       // analyze: true,
       // env: {},
