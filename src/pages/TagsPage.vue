@@ -22,12 +22,12 @@
             class="full"
             height="500"
           >
-
           </VueApexCharts>
           <q-inner-loading :showing="loading">
             <q-spinner-gears size="50px" color="primary" />
           </q-inner-loading>
         </q-item>
+        <p v-if="series.length" class="title">Наиболее часто встречающиеся слова в новостях на английском</p>
       </div>
 
       <div class="col-12 col-md-4 text-center">
@@ -39,19 +39,19 @@
             class="full"
             height="500"
           >
-
           </VueApexCharts>
           <q-inner-loading :showing="loading">
             <q-spinner-gears size="50px" color="primary" />
           </q-inner-loading>
         </q-item>
+        <p v-if="series_ru.length" class="title">Наиболее часто встречающиеся слова в новостях на русском</p>
       </div>
     </div>
 <!--новости-->
     <div class="col-12 q-pa-md flex-center" style="min-height: 200px">
-      <h3 v-if="news.length" class="title">Новости со словом {{word}}. Дата {{selectedDate}}</h3>
-      <div class="q-pa-lg row q-gutter-md">
-        <q-item>
+      <h3 v-if="news.length" class="title text-center q-ma-none">Новости со словом {{word}}. Дата {{selectedDate}}</h3>
+      <div class="q-pa-lg row q-gutter-md flex-center">
+        <q-item class="title text-center q-ma-none">
           <q-inner-loading :showing="loadingNews">
             <q-spinner-gears size="50px" color="primary" />
           </q-inner-loading>
