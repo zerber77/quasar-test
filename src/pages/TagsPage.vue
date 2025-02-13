@@ -1,5 +1,8 @@
 <template>
-
+  <ErrorMessageComponent
+    v-model = "error"
+    :errorMessage = "errorMessage"
+  />
   <q-page class="">
     <div class="row q-pa-md">
       <div class="col-12 col-md-4">
@@ -52,6 +55,7 @@
             <q-spinner-gears size="50px" color="primary" />
           </q-inner-loading>
         </q-item>
+        <div v-if="news.length" class="title">Новости со словом {{word}}. Дата {{selectedDate}}</div>
         <q-card
           v-if="news.length"
           v-for="item in news"
@@ -81,6 +85,8 @@ import VueApexCharts from 'vue3-apexcharts'
 import CalendarComponent from "components/IndexComponents/CalendarComponent.vue";
 import {getWordOfDay} from "components/modules/wordofday/getWordOfDay";
 import {getNewsWordDyDate} from "components/modules/statistics/getNewsWordDyDate";
+import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
+
 const options = ref({
   chart: {
     width: 580,
@@ -135,8 +141,13 @@ const  series = ref([])
 const  series_ru = ref([])
 const loading = ref(false)
 const loadingNews = ref(false)
+let error = ref(false)
+let errorMessage = ref('')
+
 const news = ref([])
+let word = ref('')
 let russian, english
+
 let selectedDate = ref(new Date().toISOString().slice(0, 10))
 // Функция для проверки, является ли слово английским
 function isEnglish(word) {
@@ -187,24 +198,42 @@ const wordsArrayTransform = (arr) =>{
 onMounted(async ()=>{
   const {response} = await  getWordOfDay(selectedDate.value)
   const data = response.value
-  wordsArrayTransform(data)
+  if (!data.length) {
+    error.value = true
+    errorMessage.value = `Для даты ${selectedDate.value} данные отсутствуют`
+  }
+  else wordsArrayTransform(data)
 
 })
 
 const dateChanged = async (date) => {
   selectedDate.value = date
+  if (!selectedDate.value) {
+    error.value = true
+    errorMessage.value = `Дата не выбрана`
+    return
+  }
   const {response} = await  getWordOfDay(date)
   const data = response.value
-  wordsArrayTransform(data)
+  if (!data.length) {
+    error.value = true
+    errorMessage.value = `Для даты ${selectedDate.value} данные отсутствуют`
+  }
+  else wordsArrayTransform(data)
 }
 
-const loadNews = async (word ) =>{
-  if (!word || !selectedDate.value) return
+const loadNews = async (wordParam ) =>{
+  if (!wordParam || !selectedDate.value) return
   loadingNews.value = true
   news.value.length = 0
-  const {response} = await getNewsWordDyDate(selectedDate.value, word,true)
+  word.value  = wordParam
+  const {response} = await getNewsWordDyDate(selectedDate.value, wordParam,true)
   news.value = response.value
   loadingNews.value = false
+  if (!news.value.length) {
+    error.value = true
+    errorMessage.value = `Ошибка базы данных: записей от ${selectedDate.value} для слова ${wordParam} не обнаружено`
+  }
 }
 </script>
 
