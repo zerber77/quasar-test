@@ -49,13 +49,14 @@
     </div>
 <!--новости-->
     <div class="col-12 q-pa-md " style="min-height: 200px">
+      <h3 v-if="news.length" class="title">Новости со словом {{word}}. Дата {{selectedDate}}</h3>
       <div class="q-pa-lg row q-gutter-md flex-center">
         <q-item>
           <q-inner-loading :showing="loadingNews">
             <q-spinner-gears size="50px" color="primary" />
           </q-inner-loading>
         </q-item>
-        <div v-if="news.length" class="title">Новости со словом {{word}}. Дата {{selectedDate}}</div>
+
         <q-card
           v-if="news.length"
           v-for="item in news"
