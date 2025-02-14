@@ -3,15 +3,27 @@
     v-model = "error"
     :errorMessage = "errorMessage"
   />
+  <HelpMessageComponent
+    v-model = "help"
+    :helpMessage = "helpMessage"
+  />
   <q-page class="">
     <div class="row q-pa-md">
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-md-4 row">
         <CalendarComponent
           :range = "false"
           @rangeSet = ""
           @rangeStart = ""
           @update = "dateChanged"
         />
+
+        <q-icon
+          class="q-mt-md text-green-8"
+          style="font-size: 2rem"
+          name="help"
+          @click.prevent="showHelpMessage(0)"
+        />
+
       </div>
       <div class="col-12 col-md-4 text-center">
         <q-item>
@@ -27,7 +39,14 @@
             <q-spinner-gears size="50px" color="primary" />
           </q-inner-loading>
         </q-item>
-        <p v-if="series.length" class="title">Наиболее часто встречающиеся слова в новостях на английском</p>
+        <p v-if="series.length" class="title">Наиболее часто встречающиеся слова в новостях на английском
+          <q-icon
+            class="text-green-8"
+            style="font-size: 2rem"
+            name="help"
+            @click.prevent="showHelpMessage(1)"
+          />
+        </p>
       </div>
 
       <div class="col-12 col-md-4 text-center">
@@ -44,12 +63,26 @@
             <q-spinner-gears size="50px" color="primary" />
           </q-inner-loading>
         </q-item>
-        <p v-if="series_ru.length" class="title">Наиболее часто встречающиеся слова в новостях на русском</p>
+        <p v-if="series_ru.length" class="title">Наиболее часто встречающиеся слова в новостях на русском
+        <q-icon
+          class="text-green-8"
+          style="font-size: 2rem"
+          name="help"
+          @click.prevent="showHelpMessage(2)"
+        />
+        </p>
       </div>
     </div>
 <!--новости-->
     <div class="col-12 q-pa-md flex-center" style="min-height: 200px">
-      <h3 v-if="news.length" class="title text-center q-ma-none">Новости со словом {{word}}. Дата {{selectedDate}}</h3>
+      <h3 v-if="news.length" class="title text-center q-ma-none">Новости со словом {{word}}. Дата {{selectedDate}}
+        <q-icon
+          class="text-green-8"
+          style="font-size: 2rem"
+          name="help"
+          @click.prevent="showHelpMessage(3)"
+        />
+      </h3>
       <div class="q-pa-lg row q-gutter-md flex-center">
         <q-item class="title text-center q-ma-none">
           <q-inner-loading :showing="loadingNews">
@@ -87,6 +120,7 @@ import CalendarComponent from "components/IndexComponents/CalendarComponent.vue"
 import {getWordOfDay} from "components/modules/wordofday/getWordOfDay";
 import {getNewsWordDyDate} from "components/modules/statistics/getNewsWordDyDate";
 import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
+import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
 
 const options = ref({
   chart: {
@@ -100,6 +134,13 @@ const options = ref({
     }
   },
   labels: [],
+  tooltip: {
+    custom: function({series, seriesIndex, dataPointIndex, w}) {
+      return '<div style="margin: 3px">' +
+        '<span>' + w.config.labels[seriesIndex]+ '</span>' +
+        '</div>'
+    }
+  },
   responsive: [{
     breakpoint: 480,
     options: {
@@ -125,6 +166,13 @@ const options_ru = ref({
     }
   },
   labels: [],
+  tooltip: {
+    custom: function({series, seriesIndex, dataPointIndex, w}) {
+      return '<div style="margin: 3px">' +
+        '<span>' + w.config.labels[seriesIndex]+ '</span>' +
+        '</div>'
+    }
+  },
   responsive: [{
     breakpoint: 480,
     options: {
@@ -144,6 +192,8 @@ const loading = ref(false)
 const loadingNews = ref(false)
 let error = ref(false)
 let errorMessage = ref('')
+let help = ref(false)
+let helpMessage = ref('')
 
 const news = ref([])
 let word = ref('')
@@ -230,13 +280,30 @@ const loadNews = async (wordParam ) =>{
   loadingNews.value = true
   news.value.length = 0
   word.value  = wordParam
-  const {response} = await getNewsWordDyDate(selectedDate.value, wordParam,true)
+  const {response} = await getNewsWordDyDate(selectedDate.value, wordParam)
   news.value = response.value
   loadingNews.value = false
   if (!news.value.length) {
     error.value = true
     errorMessage.value = `Ошибка базы данных: записей от ${selectedDate.value} для слова ${wordParam} не обнаружено`
   }
+}
+const HelpMessages = [
+  'В данном разделе можно увидеть наиболее часто встречающиеся слова в новостях за определенный день. ' +
+  'Выберите интересующую дату и дождитесь, когда будут нарисованы диаграммы. Кликнув по интересующему ' +
+  'сектору диаграмы вы можете получить список новостей с нужным словом.',
+  'На диаграмме представлены часто встречающиеся слова в сообщениях на английском языке. Есть ряд недочетов: ' +
+  'слово nato встречается чаще всего, так как новостей от данного источника достаточно много и добавить его в ' +
+  'стоп-слова нет возможности, нало будет поработать над этим. Также python с помощью библиотеки NLTK не справляется с именами,' +
+  'поэтому можно встретить два разных слова trump  и trumps.',
+  'На диаграмме представлены часто встречающиеся слова в сообщениях на русском языке ',
+  'Ниже представлен список новостей с выбранныи словом. Стоит отметить, что количество упоминаний слов в ' +
+  'новостях может отличаться от представленного на диаграмме. Это происходит потому, что python-скрипт на сервере ' +
+  'с помощью библиотеки NLTK производит ряд преобразований над словами',
+]
+const showHelpMessage = (id) => {
+  helpMessage.value = HelpMessages[id]
+  help.value = true
 }
 </script>
 
@@ -254,4 +321,5 @@ const loadNews = async (wordParam ) =>{
 .chart
   min-height: 300px !important
   max-height: 500px !important
+
 </style>
