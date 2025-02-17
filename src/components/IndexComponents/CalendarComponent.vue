@@ -7,6 +7,7 @@
       mask="YYYY-MM-DD"
       dark
       bordered
+      :disable="props.disabled"
       style="height: 390px"
       @range-start = "emit('rangeStart')"
       @range-end = setRange()
@@ -19,7 +20,8 @@
 <script setup>
 import {ref} from "vue";
 const props = defineProps({
-  range: Boolean
+  range: Boolean,
+  disabled: Boolean
 })
 const emit = defineEmits(['rangeSet', 'rangeStart', 'update'])
 let dateRange = ref({})

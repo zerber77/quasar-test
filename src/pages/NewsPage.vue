@@ -1,13 +1,28 @@
 <template>
+  <ErrorMessageComponent
+    v-model = "error"
+    :errorMessage = "errorMessage"
+  />
+  <HelpMessageComponent
+    v-model = "help"
+    :helpMessage = "helpMessage"
+  />
   <q-page class="flex-center">
     <div class="row q-pa-md">
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-4 row">
         <CalendarComponent
           :range = "false"
+          :disabled = "loading"
           @rangeSet = ""
           @rangeStart = ""
           @update = "dateChanged"
         />
+          <q-icon
+            class="q-mt-md text-green-8"
+            style="font-size: 2rem"
+            name="help"
+            @click.prevent="showHelpMessage(0)"
+          />
   <!--      <SelectAgencyComponent-->
   <!--        v-model:selectedPerson = "agency"-->
   <!--        :inputList = "agencies"-->
@@ -23,7 +38,14 @@
             :height = "400"
             @selected = filterAgencies
           />
-          <div v-if="optionsX.length" class="title">Количество публикаций по агентствам</div>
+          <div v-if="optionsX.length" class="title">Количество публикаций по агентствам
+            <q-icon
+              class="text-green-8"
+              style="font-size: 2rem"
+              name="help"
+              @click.prevent="showHelpMessage(1)"
+            />
+          </div>
         </div>
         <q-item class="text-center full">
           <q-inner-loading :showing="loading">
@@ -64,14 +86,10 @@
   </q-page>
 </template>
 
-<script>
+<script setup>
 import {useRouter} from "vue-router";
 import {getLastNewsByAgency} from "components/modules/getLastNewsByAgency";
 import {computed, onMounted, onUpdated, ref, watch} from "vue";
-import {getCountByAgency} from "components/modules/getCountByAgency";
-import {getFirstNewsByAgency} from "components/modules/getFirstNewsByAgency";
-import {getLowerNews} from "components/modules/getLowerNews";
-import {getUpperNews} from "components/modules/getUpperNews";
 import {getAllNewsByDate} from "components/modules/newsByDate/getAllNewsByDate";
 
 import {getAgencies} from "components/modules/getAgencies";
@@ -79,17 +97,9 @@ import SelectAgencyComponent from "components/NewsComponent/SelectAgencyComponen
 import CalendarComponent from "components/IndexComponents/CalendarComponent.vue";
 import ChartBarComponent from "components/Chart/ChartBarComponent.vue";
 import {getWordOfDay} from "components/modules/wordofday/getWordOfDay";
+import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
+import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
 
-export default {
-  name: "NewsPage",
-  components: {SelectAgencyComponent, CalendarComponent, ChartBarComponent},
-  props: {
-    // ag: {
-    //   type: String,
-    //   required: true
-    // },
-  },
-  setup(props){
  //   let agency = ref(router.currentRoute.value.query)
 
     let news = ref([])  ///все новости
@@ -103,6 +113,10 @@ export default {
     let agencies = ref({})  ///агентство - ключ колич-во сообщений - значение
     let loading = ref(false) //индиуатор загрузки
 
+    let error = ref(false)
+    let errorMessage = ref('')
+    let help = ref(false)
+    let helpMessage = ref('')
 /////оси для статистики агентств
     let optionsX = ref([])
     let seriesY = ref([])
@@ -133,11 +147,12 @@ export default {
         countAgencies(news)
       }
       else {
-
+        error.value = true
+        errorMessage.value = `Для выбранной даты новостей в базе данных не найдено`
       }
       agNewsFiltered.value = news.value
       setPaginationData()
-
+      loading.value = false
     })
 
     //////отслеживаем выбор персоны в селекте searchPersonComponent
@@ -198,36 +213,50 @@ export default {
       agNewsPaginated.value = agNewsFiltered.value.slice(current.value * NEWS_PER_PAGE-NEWS_PER_PAGE, current.value * NEWS_PER_PAGE)
     })
 
-    return{
-      news, agCount, agNewsFiltered,agNewsPaginated,
-      current, agencies,optionsX,seriesY,
-      loading,
-      setPaginationData,
-      paginateNews(val){
-        console.log(current.value)
-      },
-
-      async dateChanged (date)  {
-        news.value.length = 0
-        optionsX.value.length = 0
-        seriesY.value.length = 0
-        loading.value = true
-        const {response} = await  getAllNewsByDate(date)
-        news.value = response.value
-        countAgencies(news)
-        agNewsFiltered.value = news.value
-        setPaginationData()
-      },
-
-      filterAgencies(agency){
-        if (!agency) agNewsFiltered.value = news.value
-        else agNewsFiltered.value = news.value.filter((item) => item.agency === agency)
-        setPaginationData()
-
-      }
-    }
-  }
+function paginateNews(val){
+ // console.log(current.value)
 }
+
+async function dateChanged (date)  {
+  news.value.length = 0
+  optionsX.value.length = 0
+  seriesY.value.length = 0
+  loading.value = true
+  const {response} = await  getAllNewsByDate(date)
+  news.value = response.value
+  if (news.value.length) {
+    countAgencies(news)
+    agNewsFiltered.value = news.value
+    setPaginationData()
+  }
+  else {
+    error.value = true
+    errorMessage.value = `Для выбранной даты новостей в базе данных не найдено`
+  }
+  loading.value = false
+}
+
+function filterAgencies(agency){
+  if (!agency) agNewsFiltered.value = news.value
+  else agNewsFiltered.value = news.value.filter((item) => item.agency === agency)
+  setPaginationData()
+}
+
+const HelpMessages = [
+  'В данном разделе можно посмотреть все новости в определенный день.' +
+  'Выберите нужную дату на календаре и дождитесь загрузки диаграммы и новостей.' +
+  'Есть одна особенность: из-за различия часовых поясов некоторые новости будут иметь предыдущую дату.',
+
+  'На диаграмме представлено количество публикаций новостей по агентствам в выбранный день.' +
+  'Ниже представлены все новости с пагинацией (листанием). Кликнув по столбику пна диаграмме,' +
+  'можно отфильтровать новости только для выбранного агентства. ',
+
+]
+const showHelpMessage = (id) => {
+  helpMessage.value = HelpMessages[id]
+  help.value = true
+}
+
 </script>
 
 <style lang="sass" scoped>

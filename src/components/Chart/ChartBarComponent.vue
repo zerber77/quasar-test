@@ -18,6 +18,7 @@ import VueApexCharts from 'vue3-apexcharts'
 const props = defineProps({
   optionsX: Array,
   seriesY: Array,
+  word: String,
   height: Number
 });
 const emit = defineEmits(['selected'])
@@ -63,10 +64,10 @@ const series = ref([{
   data: []
 }])
 
-const { optionsX, seriesY } = toRefs(props)
+const { optionsX, seriesY, word, height } = toRefs(props)
 options.value.xaxis.categories = optionsX
 series.value[0].data = seriesY
-
+series.value[0].name = word
 
 </script>
 
