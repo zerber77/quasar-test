@@ -4,7 +4,7 @@
       type="bar"
       :options="options"
       :series="series"
-      :height=props.height
+      :height= "height"
       class="full"
     >
     </VueApexCharts>
@@ -23,6 +23,8 @@ const props = defineProps({
 });
 const emit = defineEmits(['selected'])
 
+const { optionsX, seriesY, word, height } = toRefs(props)
+
 const options =  ref({
   chart: {
     id: 'vuechart1',
@@ -30,7 +32,7 @@ const options =  ref({
     events: {
       click  (event, chartContext, opts){
         if (opts.seriesIndex === -1 || opts.dataPointIndex === -1)  emit('selected','')
-        emit('selected', options.value.xaxis.categories[opts.dataPointIndex])
+        else emit('selected', options.value.xaxis.categories[opts.dataPointIndex], props.word)
       }
     }
   },
@@ -64,7 +66,6 @@ const series = ref([{
   data: []
 }])
 
-const { optionsX, seriesY, word, height } = toRefs(props)
 options.value.xaxis.categories = optionsX
 series.value[0].data = seriesY
 series.value[0].name = word
@@ -73,5 +74,5 @@ series.value[0].name = word
 
 <style lang="sass" scoped>
 .full
-  width: 100%
+  width: 90%
 </style>
