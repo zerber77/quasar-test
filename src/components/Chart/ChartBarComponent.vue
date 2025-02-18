@@ -4,7 +4,7 @@
       type="bar"
       :options="options"
       :series="series"
-      :height=props.height
+      :height=height
       class="full"
     >
     </VueApexCharts>
@@ -55,7 +55,7 @@ const options =  ref({
 
   plotOptions: {
     bar: {
-      borderRadius: 10,
+      borderRadius: 5,
     }
   },
 })

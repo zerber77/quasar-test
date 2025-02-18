@@ -56,6 +56,15 @@ const cardOptions = ref([
       '            5 раз в сутки с 2019 года и на данный момент (январь 2025 г.) содержит около 4,5 млн. записей.'
   },
   {
+    title:'СЕГОДНЯ В НОВОСТЯХ',
+    description:'Наиболее часто встречающиеся слова в новостях за день.',
+    image:'./src/assets/images/tags.jpg',
+    style:'height: 100px; max-width: 130px',
+    path:'/TagsPage/',
+    text:'. \n' +
+      ''
+  },
+  {
     title:'СТАТИСТИКА',
     description:'Статистика встречаемости слов в новостях.',
     image:'./src/assets/images/vuechart-example.png',

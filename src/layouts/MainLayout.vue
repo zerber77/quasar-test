@@ -99,11 +99,18 @@ const linksList = [
     link: '/NewsPage/'
   },
   {
+    title: 'КАРТА МИРА',
+    caption: '',
+    icon: 'map',
+    link: '/WorldMapPage/'
+  },
+  {
     title: 'О ПРОЕКТЕ',
     caption: '',
     icon: 'star',
     link: '/'
   },
+
 
 ]
 
