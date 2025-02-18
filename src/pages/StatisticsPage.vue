@@ -43,16 +43,7 @@
                 color="primary"
                 @click="click()"
               />
-               <q-item>
-<!--                  <VueApexCharts-->
-<!--                     type="bar"-->
-<!--                     :options="options"-->
-<!--                     :series="series"-->
-<!--                     class="full"-->
-<!--                     height="400"-->
-<!--                   >-->
-
-<!--                   </VueApexCharts>-->
+        <div class="col-12 col-md-12 text-center" style="min-height: 300px !important;">
                  <ChartBarComponent
                    :optionsX = "options"
                    :seriesY = "series"
@@ -63,15 +54,16 @@
                    <q-inner-loading :showing="loading">
                      <q-spinner-gears size="50px" color="primary" />
                    </q-inner-loading>
-               </q-item>
-        <div v-if="options.length" class="title">Количество упоминаний слова {{word}} в новостях
-          <q-icon
-            class="text-green-8"
-            style="font-size: 2rem"
-            name="help"
-            @click.prevent="showHelpMessage(1)"
-          />
+                  <div v-if="options.length" class="title">Количество упоминаний слова {{word}} в новостях
+                    <q-icon
+                      class="text-green-8"
+                      style="font-size: 2rem"
+                      name="help"
+                      @click.prevent="showHelpMessage(1)"
+                    />
+                  </div>
         </div>
+
       </div>
     </div>
 
@@ -155,7 +147,7 @@ const series = ref([])
 let optionsX = ref([])
 let seriesY = ref([])
 
-const loadNews = async (word , date ) =>{
+const loadNews = async (date, word ) =>{
   if (!word || !date) return
   loadingNews.value = true
   news.value = []
@@ -163,7 +155,7 @@ const loadNews = async (word , date ) =>{
   seriesY.value.length = 0
   const {response} = await getNewsWordDyDate(date, word)
   news.value = response.value
-  console.log('news',news.value)
+//  console.log('news',news.value)
   filteredNews.value = news.value
   loadingNews.value = false
   const agencyCounter = news.value.reduce((acc,item) =>{
@@ -176,52 +168,6 @@ const loadNews = async (word , date ) =>{
     seriesY.value.push(agencyCounter[key])
   }
 }
-
-///////////////////////////////////////////// настройки графика
-// const options =  ref({
-//   chart: {
-//     id: 'vuechart-example',
-//     height: '500',
-//     events: {
-//       click  (event, chartContext, opts){
-//           if (opts.seriesIndex === -1 || opts.dataPointIndex === -1) return
-//           loadNews(opts.config.series[opts.seriesIndex].name, opts.config.xaxis.categories[opts.dataPointIndex])
-//       }
-//     }
-//   },
-//   xaxis: {
-//     categories: [],
-//     axisTicks: {
-//       show: false
-//     },
-//     crosshairs: {
-//       fill: {
-//         type: 'gradient',
-//         gradient: {
-//           colorFrom: '#D8E3F0',
-//           colorTo: '#BED1E6',
-//           stops: [0, 100],
-//           opacityFrom: 0.4,
-//           opacityTo: 0.5,
-//         }
-//       }
-//     },
-//     tooltip: {
-//       enabled: true,
-//     }
-//
-//   },
-//   plotOptions: {
-//     bar: {
-//       borderRadius: 10,
-//     }
-//   },
-// })
-// const series = ref([{
-//   name: word.value,
-//   data: []
-// }])
-///////////////////////////////////////////////////
 
 const  getDatesArray = async (start, end) => {
   const arr = [];
