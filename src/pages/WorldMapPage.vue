@@ -1,6 +1,5 @@
 <template>
   <q-page>
-    <h3 class="title text-center q-ma-none">Карта мира</h3>
     <WorldMapComponent />
   </q-page>
 </template>
