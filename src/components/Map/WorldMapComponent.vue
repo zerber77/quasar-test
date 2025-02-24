@@ -25,127 +25,50 @@ let chart = null;
 const countryNamesRU = getCountryNamesRU()
 // Функция для добавления русских названий в геоданные
 function addRussianNamesToGeoData(geoData, countryNamesRU) {
+  debugger
   if (geoData && geoData.features) {
     geoData.features.forEach(feature => {
-      const isoCode = feature.properties.id // Получаем ISO-код страны
+      const isoCode = feature.properties.id // Получаем код страны
       if (countryNamesRU[isoCode]) {
         feature.properties.nameRU = countryNamesRU[isoCode]; // Добавляем русское название
       } else {
         feature.properties.nameRU = feature.properties.name; // Если нет перевода, используем оригинальное имя
       }
-    });
+    })
   }
 }
 
-function mergeRegions(geoData) {
-  if (geoData && geoData.features) {
-    geoData.features.forEach(feature => {
-      // Объединяем Тайвань с Китаем
-      console.log(feature)
 
-      // Объединяем Крым с Россией
-      if (feature.properties.name === "Crimea") {
-        feature.properties.parent = "RU"; // Добавляем Крым как часть России
-      }
-      if (feature.properties.id === "TW") {
-        feature.properties.parent = "CN" // Добавляем Тайвань как часть Китая
-        feature.properties.id = "CN"
-      }
-    });
-  }
-}
-
-// Функция для переноса Крыма в Россию
-function transferCrimeaToRussia(geoData) {
-  if (geoData && geoData.features) {
-    debugger
-    // Находим Украину и Россию по их ID
-    const ukraine = geoData.features.find(feature => feature.properties.id === "UA");
-    const russia = geoData.features.find(feature => feature.properties.id === "RU");
-
-    if (ukraine && russia) {
-      // Координаты Крыма (диапазон для поиска)
-      const isCrimea = (coords) =>
-        coords[0] >= 33 && coords[0] <= 36 && coords[1] >= 44 && coords[1] <= 47;
-
-      // Ищем Крым в многоугольнике Украины
-      // const crimeaPolygonIndex = ukraine.geometry.coordinates[0].findIndex((polygon) =>
-      //   polygon.some(isCrimea)
-      // );
-      const crimeaPolygonIndex = 10
-      if (crimeaPolygonIndex !== -1) {
-        // Получаем координаты Крыма
-        const crimeaCoordinates = ukraine.geometry.coordinates[0][crimeaPolygonIndex];
-
-        // Удаляем Крым из Украины
-        ukraine.geometry.coordinates.splice(crimeaPolygonIndex, 1);
-
-        // Добавляем Крым в Россию
-        if (!russia.geometry.coordinates) {
-          russia.geometry.coordinates = [];
-        }
-        russia.geometry.coordinates[22] = []
-        russia.geometry.coordinates[22].push(crimeaCoordinates);
-        console.log(russia.geometry.coordinates)
-      }
-    }
-  }
-}
     // Инициализация карты
     const initMap = () => {
- //     mergeRegions(am4geodataWorldLow)
-      addRussianNamesToGeoData(am4geodataWorldLow, countryNamesRU);
-      transferCrimeaToRussia(am4geodataWorldLow);
       chart = am4core.create(chartdiv.value, am4maps.MapChart);
-
       // Задаем географические данные
-      chart.geodata = am4geodataWorldLow;
-
+     // chart.geodata = am4geodataWorldLow;
       // Создаем полигон для отображения стран
-      const polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
-      polygonSeries.useGeodata = true;
+      const polygonSeries = chart.series.push(new am4maps.MapPolygonSeries())
+ //     polygonSeries.useGeodata = true
+//      polygonSeries.exclude = ["AQ"]
+      polygonSeries.geodataSource.url = "../src/components/Map/word.json"
+      // Применяем обработку после загрузки данных
+      polygonSeries.geodataSource.events.on("geodataupdated", () => {
+        debugger
+        const geoData = polygonSeries.geodataSource.data;
+        addRussianNamesToGeoData(geoData, countryNamesRU);
+      })
 
-      // Настройка внешнего вида полигонов
+      // polygonSeries.events.on("datavalidated", function() {
+      //
+      //   polygonSeries.mapPolygons.each(function(polygon, index) {
+      //     polygon.fill = chart.colors.getIndex(index);
+      //   })
+      // })
+
       // Настройка внешнего вида полигонов
       const polygonTemplate = polygonSeries.mapPolygons.template;
       polygonTemplate.tooltipText = "{nameRU}"; // Используем русское название
+ //     polygonTemplate.tooltipText = "{name}";
       polygonTemplate.fill = am4core.color("#67b7dc");
 
-      ////// Добавляем обработчик события datavalidated
-      // polygonSeries.events.on("datavalidated", () => {
-      //   console.log("isCrimea:", polygonSeries.mapPolygons.values[0])
-      //   polygonSeries.mapPolygons.each((polygon) => {
-      //     const countryId = polygon.dataItem?.dataContext?.id;
-      //
-      //     // Обрабатываем Тайвань
-      //     if (countryId === "TW") {
-      //       polygon.fill = am4core.color("#FF0000"); // Цвет Китая
-      //       polygon.stroke = am4core.color("#000000");
-      //       polygon.strokeWidth = 0.5;
-      //     }
-      //
-      //     // Обрабатываем Крым (по координатам)
-      //     const isCrimea = polygon.dataItem?.dataContext?.multiPolygon?.some(
-      //       (polygonCoords) =>
-      //         polygonCoords[0].some(
-      //           (coord) => coord[0] >= 33 && coord[0] <= 36 && coord[1] >= 44 && coord[1] <= 47
-      //         )
-      //     );
-      //
-      //     if (isCrimea) {
-      //       polygon.fill = am4core.color("#0000FF"); // Цвет России
-      //       polygon.stroke = am4core.color("#000000");
-      //       polygon.strokeWidth = 0.5;
-      //     }
-      //
-      //     // Применяем стандартные цвета для других стран
-      //     if (!polygon.fill) {
-      //       polygon.fill = am4core.color("#67b7dc");
-      //       polygon.stroke = am4core.color("#000000");
-      //       polygon.strokeWidth = 0.5;
-      //     }
-      //   });
-      // });
 
 
       // Изменяем цвет при наведении
@@ -171,6 +94,10 @@ function transferCrimeaToRussia(geoData) {
       /////события
       polygonTemplate.events.on("hit", (ev) => {
         console.log(ev.target.dataItem.dataContext.name)
+      })
+      const hs = polygonTemplate.states.create("hover");
+      hs.adapter.add("fill", function(fill) {
+        return fill.brighten(-0.2);
       })
     }
 
