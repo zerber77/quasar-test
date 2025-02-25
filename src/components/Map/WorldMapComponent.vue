@@ -18,17 +18,22 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodataWorldLow from "@amcharts/amcharts4-geodata/worldLow"
 import {getCountryNamesRU} from "components/modules/maps/RU_names";
+import geoData from "components/Map/word.json"
 
 const chartdiv = ref(null);
 let chart = null;
+
+const emit = defineEmits(['onCountry'])
 // Определение русской локали
 const countryNamesRU = getCountryNamesRU()
 // Функция для добавления русских названий в геоданные
 function addRussianNamesToGeoData(geoData, countryNamesRU) {
-  debugger
   if (geoData && geoData.features) {
     geoData.features.forEach(feature => {
-      const isoCode = feature.properties.id // Получаем код страны
+ //     debugger
+      let isoCode
+      if (feature.id) isoCode = feature.id
+      else isoCode = feature.properties.id
       if (countryNamesRU[isoCode]) {
         feature.properties.nameRU = countryNamesRU[isoCode]; // Добавляем русское название
       } else {
@@ -42,22 +47,14 @@ function addRussianNamesToGeoData(geoData, countryNamesRU) {
     // Инициализация карты
     const initMap = () => {
       chart = am4core.create(chartdiv.value, am4maps.MapChart);
-      // Задаем географические данные
-     // chart.geodata = am4geodataWorldLow;
       // Создаем полигон для отображения стран
       const polygonSeries = chart.series.push(new am4maps.MapPolygonSeries())
- //     polygonSeries.useGeodata = true
-//      polygonSeries.exclude = ["AQ"]
-      polygonSeries.geodataSource.url = "../src/components/Map/word.json"
-      // Применяем обработку после загрузки данных
-      polygonSeries.geodataSource.events.on("geodataupdated", () => {
-        debugger
-        const geoData = polygonSeries.geodataSource.data;
-        addRussianNamesToGeoData(geoData, countryNamesRU);
-      })
+      addRussianNamesToGeoData(geoData, countryNamesRU)
+      polygonSeries.geodata = geoData
+      polygonSeries.useGeodata = true
+      polygonSeries.exclude = ["AQ"]
 
       // polygonSeries.events.on("datavalidated", function() {
-      //
       //   polygonSeries.mapPolygons.each(function(polygon, index) {
       //     polygon.fill = chart.colors.getIndex(index);
       //   })
@@ -66,10 +63,7 @@ function addRussianNamesToGeoData(geoData, countryNamesRU) {
       // Настройка внешнего вида полигонов
       const polygonTemplate = polygonSeries.mapPolygons.template;
       polygonTemplate.tooltipText = "{nameRU}"; // Используем русское название
- //     polygonTemplate.tooltipText = "{name}";
       polygonTemplate.fill = am4core.color("#67b7dc");
-
-
 
       // Изменяем цвет при наведении
       polygonTemplate.propertyFields.fill = "color";
@@ -80,7 +74,7 @@ function addRussianNamesToGeoData(geoData, countryNamesRU) {
       // Добавляем зум-контроль
       chart.zoomControl = new am4maps.ZoomControl();
       chart.homeZoomLevel = 1;
-      chart.homeGeoPoint = { longitude: 0, latitude: 0 }
+      chart.homeGeoPoint = { longitude: 0, latitude: 15 }
 
       // Настройка тултипов и надписей без использования am4core.locale
       chart.zoomControl.plusButton.tooltipText = "Увеличить";
@@ -93,7 +87,9 @@ function addRussianNamesToGeoData(geoData, countryNamesRU) {
 
       /////события
       polygonTemplate.events.on("hit", (ev) => {
-        console.log(ev.target.dataItem.dataContext.name)
+        // console.log(ev.target.dataItem.dataContext.name)
+        // console.log(ev.target.dataItem.dataContext.nameRU)
+        emit('onCountry',ev.target.dataItem.dataContext.name, ev.target.dataItem.dataContext.nameRU)
       })
       const hs = polygonTemplate.states.create("hover");
       hs.adapter.add("fill", function(fill) {
