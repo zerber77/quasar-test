@@ -25,7 +25,7 @@
                   class="q-mt-md text-green-8"
                   style="font-size: 2rem"
                   name="help"
-                  @click.prevent="showHelpMessage(0)"
+                  @click.prevent="setHelpMessage(HelpMessages[0])"
                 />
              </div>
               <CalendarComponent
@@ -59,7 +59,7 @@
                       class="text-green-8"
                       style="font-size: 2rem"
                       name="help"
-                      @click.prevent="showHelpMessage(1)"
+                      @click.prevent="setHelpMessage(HelpMessages[1])"
                     />
                   </div>
         </div>
@@ -79,7 +79,7 @@
               class="text-green-8"
               style="font-size: 2rem"
               name="help"
-              @click.prevent="showHelpMessage(2)"
+              @click.prevent="setHelpMessage(HelpMessages[2])"
             />
           </div>
         </div>
@@ -126,6 +126,7 @@ import {getWordCountByDate} from "components/modules/statistics/getWordCountByDa
 import {getNewsWordDyDate} from "components/modules/statistics/getNewsWordDyDate";
 import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
 import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
+import useMessageVars from "components/modules/messages/getMessageVars";
 
 const word = ref('Trump')
 const calcButton = ref(true)
@@ -136,10 +137,7 @@ let count = ref({})
 let news = ref([])
 let filteredNews = ref([])
 
-let error = ref(false)
-let errorMessage = ref('')
-let help = ref(false)
-let helpMessage = ref('')
+const {help, error,helpMessage,errorMessage, setHelpMessage, setErrorMessage} = useMessageVars()
 
 let options = ref([])
 const series = ref([])
@@ -187,8 +185,7 @@ const  getDatesArray = async (start, end) => {
     start = dt.toISOString().slice(0,10)
   }
   if (series.value.every(item => item === '0')) {
-    error.value = true
-    errorMessage.value = `Для выбранного диапазона дат данные отсутствуют`
+      setErrorMessage(`Для выбранного диапазона дат данные отсутствуют`)
   }
   loading.value = false
   return arr;
@@ -230,7 +227,7 @@ const filterAgencies = (agency) => {
   filteredNews.value = news.value.filter((item) => item.agency === agency)
 }
 
-const HelpMessages = [
+const HelpMessages = ref([
   'В данном разделе можно посчитать, сколько раз встречается слово в новостях за определенный промежуток времени.' +
   'Наберите интересующее слово в поле ввода слева (не менее 2-х букв), затем укажите диапазон дат в календаре.' +
   'Если все введено правильно, появится кнопка "ПОСЧИТАТЬ". Нажмите ее и дождитесь, когда будет нарисована диаграмма.',
@@ -240,11 +237,7 @@ const HelpMessages = [
 
   'На диаграмме представлены все новости с интересующим словом в выбранный день,' +
   'Кликнув по сторлбику, новости будут отфильтрованы  по выбранному агентству, ',
-]
-const showHelpMessage = (id) => {
-  helpMessage.value = HelpMessages[id]
-  help.value = true
-}
+])
 
 </script>
 

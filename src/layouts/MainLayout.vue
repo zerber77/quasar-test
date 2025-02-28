@@ -81,6 +81,12 @@ import { useRouter } from 'vue-router';
 
 const linksList = [
   {
+    title: 'ВОЙТИ НА САЙТ',
+    caption: '',
+    icon: 'person',
+    link: '/SignUpPage/'
+  },
+  {
     title: 'СЕГОДНЯ В НОВОСТЯХ',
     caption: '',
     icon: 'today',

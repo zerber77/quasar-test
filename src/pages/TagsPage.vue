@@ -21,7 +21,7 @@
           class="q-mt-md text-green-8"
           style="font-size: 2rem"
           name="help"
-          @click.prevent="showHelpMessage(0)"
+          @click.prevent="setHelpMessage(HelpMessages[0])"
         />
 
       </div>
@@ -44,7 +44,7 @@
             class="text-green-8"
             style="font-size: 2rem"
             name="help"
-            @click.prevent="showHelpMessage(1)"
+            @click.prevent="setHelpMessage(HelpMessages[1])"
           />
         </p>
       </div>
@@ -68,7 +68,7 @@
           class="text-green-8"
           style="font-size: 2rem"
           name="help"
-          @click.prevent="showHelpMessage(2)"
+          @click.prevent="setHelpMessage(HelpMessages[2])"
         />
         </p>
       </div>
@@ -80,7 +80,7 @@
           class="text-green-8"
           style="font-size: 2rem"
           name="help"
-          @click.prevent="showHelpMessage(3)"
+          @click.prevent="setHelpMessage(HelpMessages[3])"
         />
       </h3>
       <div class="q-pa-lg row q-gutter-md flex-center">
@@ -121,6 +121,7 @@ import {getWordOfDay} from "components/modules/wordofday/getWordOfDay";
 import {getNewsWordDyDate} from "components/modules/statistics/getNewsWordDyDate";
 import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
 import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
+import useMessageVars from "components/modules/messages/getMessageVars";
 
 const options = ref({
   chart: {
@@ -190,10 +191,8 @@ const  series = ref([])
 const  series_ru = ref([])
 const loading = ref(false)
 const loadingNews = ref(false)
-let error = ref(false)
-let errorMessage = ref('')
-let help = ref(false)
-let helpMessage = ref('')
+
+const {help, error,helpMessage,errorMessage, setHelpMessage, setErrorMessage} = useMessageVars()
 
 const news = ref([])
 let word = ref('')
@@ -255,8 +254,7 @@ onMounted(async ()=>{
   const {response} = await  getWordOfDay(selectedDate.value)
   const data = response.value
   if (!data.length) {
-    error.value = true
-    errorMessage.value = `Для даты ${selectedDate.value} данные отсутствуют`
+    setErrorMessage(`Для даты ${selectedDate.value} данные отсутствуют`)
   }
   else wordsArrayTransform(data)
 
@@ -265,16 +263,14 @@ onMounted(async ()=>{
 const dateChanged = async (date) => {
   selectedDate.value = date
   if (!selectedDate.value) {
-    error.value = true
-    errorMessage.value = `Дата не выбрана`
+    setErrorMessage(`Дата не выбрана`)
     return
   }
   clearCharts()
   const {response} = await  getWordOfDay(date)
   const data = response.value
   if (!data.length) {
-    error.value = true
-    errorMessage.value = `Для даты ${selectedDate.value} данные отсутствуют`
+    setErrorMessage(`Для даты ${selectedDate.value} данные отсутствуют`)
   }
   else wordsArrayTransform(data)
 }
@@ -288,11 +284,10 @@ const loadNews = async (wordParam ) =>{
   news.value = response.value
   loadingNews.value = false
   if (!news.value.length) {
-    error.value = true
-    errorMessage.value = `Ошибка базы данных: записей от ${selectedDate.value} для слова ${wordParam} не обнаружено`
+    setErrorMessage(`Ошибка базы данных: записей от ${selectedDate.value} для слова ${wordParam} не обнаружено`)
   }
 }
-const HelpMessages = [
+const HelpMessages = ref([
   'В данном разделе можно увидеть наиболее часто встречающиеся слова в новостях за определенный день. ' +
   'Выберите интересующую дату и дождитесь, когда будут нарисованы диаграммы. Кликнув по интересующему ' +
   'сектору диаграмы вы можете получить список новостей с нужным словом.',
@@ -309,11 +304,8 @@ const HelpMessages = [
   'новостях может отличаться от представленного на диаграмме. Это происходит потому, что python-скрипт на сервере ' +
   'с помощью библиотеки NLTK производит ряд преобразований над словами. Также могут присутствовать новости ' +
   'с предыдущей датой из-за разности часовых поясов.',
-]
-const showHelpMessage = (id) => {
-  helpMessage.value = HelpMessages[id]
-  help.value = true
-}
+])
+
 </script>
 
 <style lang="sass" scoped>

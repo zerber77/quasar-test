@@ -1,14 +1,6 @@
 <template>
   <div class="col-12 col-md-12 text-center" style="min-height: 300px !important;">
       <div ref="chartdiv" style="width: 100%; height: 600px;"></div>
-      <div class="title">Карта мира
-        <q-icon
-          class="text-green-8"
-          style="font-size: 2rem"
-          name="help"
-          @click.prevent="showHelpMessage(1)"
-        />
-      </div>
   </div>
 </template>
 
@@ -115,8 +107,5 @@ function addRussianNamesToGeoData(geoData, countryNamesRU) {
 </script>
 
 <style lang="sass" scoped>
-.title
-  font-size: 1.5em
-  font-weight: bold
-  color: #2669a1
+
 </style>

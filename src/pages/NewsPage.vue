@@ -21,7 +21,7 @@
             class="q-mt-md text-green-8"
             style="font-size: 2rem"
             name="help"
-            @click.prevent="showHelpMessage(0)"
+            @click.prevent="setHelpMessage(HelpMessages[0])"
           />
   <!--      <SelectAgencyComponent-->
   <!--        v-model:selectedPerson = "agency"-->
@@ -43,7 +43,7 @@
               class="text-green-8"
               style="font-size: 2rem"
               name="help"
-              @click.prevent="showHelpMessage(1)"
+              @click.prevent="setHelpMessage(HelpMessages[1])"
             />
           </div>
         </div>
@@ -99,6 +99,7 @@ import ChartBarComponent from "components/Chart/ChartBarComponent.vue";
 import {getWordOfDay} from "components/modules/wordofday/getWordOfDay";
 import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
 import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
+import useMessageVars from "components/modules/messages/getMessageVars";
 
  //   let agency = ref(router.currentRoute.value.query)
 
@@ -113,10 +114,7 @@ import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
     let agencies = ref({})  ///агентство - ключ колич-во сообщений - значение
     let loading = ref(false) //индиуатор загрузки
 
-    let error = ref(false)
-    let errorMessage = ref('')
-    let help = ref(false)
-    let helpMessage = ref('')
+    const {help, error,helpMessage,errorMessage, setHelpMessage, setErrorMessage} = useMessageVars()
 /////оси для статистики агентств
     let optionsX = ref([])
     let seriesY = ref([])
@@ -147,8 +145,7 @@ import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
         countAgencies(news)
       }
       else {
-        error.value = true
-        errorMessage.value = `Для выбранной даты новостей в базе данных не найдено`
+        setErrorMessage(`Для выбранной даты новостей в базе данных не найдено`)
       }
       agNewsFiltered.value = news.value
       setPaginationData()
@@ -230,8 +227,7 @@ async function dateChanged (date)  {
     setPaginationData()
   }
   else {
-    error.value = true
-    errorMessage.value = `Для выбранной даты новостей в базе данных не найдено`
+    setErrorMessage(`Для выбранной даты новостей в базе данных не найдено`)
   }
   loading.value = false
 }
@@ -242,7 +238,7 @@ function filterAgencies(agency){
   setPaginationData()
 }
 
-const HelpMessages = [
+const HelpMessages = ref([
   'В данном разделе можно посмотреть все новости в определенный день.' +
   'Выберите нужную дату на календаре и дождитесь загрузки диаграммы и новостей.' +
   'Есть одна особенность: из-за различия часовых поясов некоторые новости будут иметь предыдущую дату.',
@@ -251,11 +247,7 @@ const HelpMessages = [
   'Ниже представлены все новости с пагинацией (листанием). Кликнув по столбику на диаграмме,' +
   'можно отфильтровать новости только для выбранного агентства. ',
 
-]
-const showHelpMessage = (id) => {
-  helpMessage.value = HelpMessages[id]
-  help.value = true
-}
+])
 
 </script>
 
