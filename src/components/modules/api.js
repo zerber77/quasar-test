@@ -4,7 +4,8 @@
 import axios from "axios";
 
 const api = axios.create({
- baseURL: 'http://quasar-test/',
+// baseURL: 'http://quasar-test/',
+  baseURL: '/',
   // auth:{
   //     username: 'admin',
   //     password: 'admin'
