@@ -15,7 +15,8 @@ export function usePost(url,dataToSend = {},options={},showLoader = true){
     })
     const request = async () => {
         try {
-            const res = await api.post('http://quasar-test/'+url, dataToSend, options);
+          const res = await api.post(url, dataToSend, options);
+        //    const res = await api.post('http://quasar-test/'+url, dataToSend, options);
         //    const res = await axios.post('/'+url, dataToSend, options)  /////это серверный урл   spa/
             response.value = res.data;
             if (showLoader) {
