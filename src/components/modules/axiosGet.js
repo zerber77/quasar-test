@@ -19,9 +19,11 @@ export function useGet(url,options={},showLoader =true){
     message: 'Получение данных'
   })
   const request = async () => {
+
     try {
-   // const res = await axios.get('http://quasar-test/'+url)
-      const res = await axios.get('/'+url)  /////это серверный урл   spa/
+      const res = await api.get(url)
+    //const res = await api.get('http://quasar-test/'+url)
+    //  const res = await axios.get('/'+url)  /////это серверный урл   spa/
       response.value = await res.data
       if (showLoader) Loading.hide()
     }catch (e) {

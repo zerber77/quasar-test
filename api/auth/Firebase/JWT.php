@@ -147,7 +147,7 @@ class JWT
             $sig = self::signatureToDER($sig);
         }
         if (!self::verify("{$headb64}.{$bodyb64}", $sig, $key->getKeyMaterial(), $header->alg)) {
-            throw new SignatureInvalidException('Signature verification failed');
+            throw new UnexpectedValueException('Signature verification failed');
         }
 
         // Check the nbf if it is defined. This is the time that the

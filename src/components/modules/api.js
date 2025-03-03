@@ -4,32 +4,28 @@
 import axios from "axios";
 
 const api = axios.create({
- // baseURL: 'http://quasar-test/api/',
+ baseURL: 'http://quasar-test/',
   // auth:{
   //     username: 'admin',
   //     password: 'admin'
   // },
-  headers: {
-      'Access-Control-Allow-Origin' : '*',
-      'Access-Control-Allow-Credentials' : 'true',
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-
-  },
+  // headers: {
+  //     'Access-Control-Allow-Origin' : ' http://quasar-test',
+  //     'Access-Control-Allow-Credentials' : 'true',
+  //     'Content-Type': 'application/json',
+  //     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  //     'Access-Control-Allow-Headers': 'Content-Type',
+  //
+  // },
   withCredentials:true,
   crossDomain:true
 })
 
 api.interceptors.request.use(config => {
-    // config.auth = {
-    //     username: 'admin',
-    //     password: 'admin'
-    // }
-    // config.headers['Accept-Language'] = 'ru-RU'
-    // config.headers['Access-Control-Request-Method'] = 'GET'
-    // config.headers['Authorization'] = 'Basic YWRtaW46YWRtaW4='
-    // config.headers['Access-Control-Request-Headers'] = 'X-Custom-Header'
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`; // Добавляем токен в заголовок
+    }
     // config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     return config
   },

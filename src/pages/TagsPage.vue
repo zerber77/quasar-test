@@ -251,12 +251,17 @@ const wordsArrayTransform = (arr) =>{
 }
 
 onMounted(async ()=>{
-  const {response} = await  getWordOfDay(selectedDate.value)
-  const data = response.value
-  if (!data.length) {
-    setErrorMessage(`Для даты ${selectedDate.value} данные отсутствуют`)
+  try {
+    const {response} = await  getWordOfDay(selectedDate.value)
+    const data = response.value
+    if (!data.length) {
+      setErrorMessage(`Для даты ${selectedDate.value} данные отсутствуют`)
+    }
+    else wordsArrayTransform(data)
+  }catch (err){
+    setErrorMessage(`Ошибка ${err}`)
   }
-  else wordsArrayTransform(data)
+
 
 })
 
@@ -267,12 +272,16 @@ const dateChanged = async (date) => {
     return
   }
   clearCharts()
-  const {response} = await  getWordOfDay(date)
-  const data = response.value
-  if (!data.length) {
-    setErrorMessage(`Для даты ${selectedDate.value} данные отсутствуют`)
+  try {
+    const {response} = await  getWordOfDay(selectedDate.value)
+    const data = response.value
+    if (!data.length) {
+      setErrorMessage(`Для даты ${selectedDate.value} данные отсутствуют`)
+    }
+    else wordsArrayTransform(data)
+  }catch (err){
+    setErrorMessage(`Ошибка ${err}`)
   }
-  else wordsArrayTransform(data)
 }
 
 const loadNews = async (wordParam ) =>{

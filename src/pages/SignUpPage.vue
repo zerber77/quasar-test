@@ -81,7 +81,8 @@ const handleSubmit = async () => {
     });
 
     // Если всё успешно, перенаправляем пользователя или показываем сообщение успеха
-    console.log('Регистрация успешна:', response.data);
+    console.log('Регистрация успешна:', response.personID.value.token);
+    localStorage.setItem('authToken', response.personID.value.token);
     alert('Вы успешно зарегистрированы!');
     // Можно добавить редирект на страницу входа или другую страницу
   } catch (error) {

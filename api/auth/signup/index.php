@@ -1,14 +1,17 @@
 <?php
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Access-Control-Allow-Credentials: true');
-session_set_cookie_params(3600 * 24 * 3);
-session_start();
+header('Access-Control-Allow-Origin: http://localhost:9000');
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
+
+//use Firebase\JWT\JWT;
+require("..\Firebase\JWT.php");
+require("..\Firebase\Key.php");
+$JWT = new JWT();
 // Конфигурация подключения к БД
 //$host = 'localhost';
 //$dbname = 'your_database_name';
@@ -69,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   // Генерируем JWT токен
-  $key = "example_key"; // Это секретный ключ, который должен быть безопасно храниться
+
   $payload = [
     "iss" => "http://news-analitika.org",
     "aud" => "http://news-analitika.com",
@@ -81,8 +84,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       "login" => $login
     ]
   ];
-  $jwt = JWT::encode($payload, $key);
-
+  $jwt = JWT::encode($payload, $key,'HS256');
+// Декодирование токена
+  try {
+    $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
+    // Преобразование в массив
+    $decoded_array = (array)$decoded;
+    print_r($decoded_array);
+  } catch (\Exception $e) {
+    echo 'Error: ' . $e->getMessage();
+  }
   // Возвращаем токен клиенту
   http_response_code(201); // Created
   echo json_encode(['token' => $jwt]);

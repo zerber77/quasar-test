@@ -3,7 +3,7 @@
 import {usePost} from "./axiosPostApi";
 
 export async function postSignUpData(personData){
-  const {response:personID, request} = usePost('api/auth/signup', personData)
+  const {response:personID, request} = usePost('api/auth/signup/', personData)
   try {
     await request()
   }catch (e) {
