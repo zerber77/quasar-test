@@ -1,7 +1,7 @@
 import {ref} from 'vue'
 import api from "./api";
 import {QSpinnerGears, Loading} from "quasar";
-
+import axios from "axios";
 /// с параметрами все понятно вроде, добавлен showLoader для отображения спиннера загрузки, при false не отображать.
 /// Не отображать, если элемент (например select имеет свой индикатор загрузки)
 export function usePost(url,dataToSend = {},options={},showLoader = true){
@@ -15,7 +15,7 @@ export function usePost(url,dataToSend = {},options={},showLoader = true){
     })
     const request = async () => {
         try {
-       //     const res = await api.post('http://quasar-test/'+url, dataToSend, options);
+        //    const res = await api.post('http://quasar-test/'+url, dataToSend, options);
             const res = await axios.post('/'+url, dataToSend, options)  /////это серверный урл   spa/
             response.value = res.data;
             if (showLoader) {
