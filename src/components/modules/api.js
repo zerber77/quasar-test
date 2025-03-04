@@ -4,19 +4,11 @@
 import axios from "axios";
 
 const api = axios.create({
- baseURL: 'http://quasar-test/',
- // baseURL: '/',
+ //baseURL: 'http://quasar-test/',
+  baseURL: '/',
   // auth:{
   //     username: 'admin',
   //     password: 'admin'
-  // },
-  // headers: {
-  //     'Access-Control-Allow-Origin' : ' http://quasar-test',
-  //     'Access-Control-Allow-Credentials' : 'true',
-  //     'Content-Type': 'application/json',
-  //     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  //     'Access-Control-Allow-Headers': 'Content-Type',
-  //
   // },
   withCredentials:true,
   crossDomain:true

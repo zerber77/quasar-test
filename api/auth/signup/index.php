@@ -4,14 +4,15 @@ header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
+
+//require __DIR__ . '..\..\..\..\vendor/autoload.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-
-//use Firebase\JWT\JWT;
 require("..\Firebase\JWT.php");
 require("..\Firebase\Key.php");
-$JWT = new JWT();
+
+//$JWT = new JWT();
 // Конфигурация подключения к БД
 //$host = 'localhost';
 //$dbname = 'your_database_name';
@@ -77,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     "iss" => "http://news-analitika.org",
     "aud" => "http://news-analitika.com",
     "iat" => time(),
-    "nbf" => time() + 60,
+   // "nbf" => time() + 60,
     "exp" => time() + 3600,
     "data" => [
       "id" => $pdo->lastInsertId(),
@@ -86,14 +87,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   ];
   $jwt = JWT::encode($payload, $key,'HS256');
 // Декодирование токена
-  try {
-    $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
-    // Преобразование в массив
-    $decoded_array = (array)$decoded;
-    print_r($decoded_array);
-  } catch (\Exception $e) {
-    echo 'Error: ' . $e->getMessage();
-  }
+//  try {
+//    $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
+//    // Преобразование в массив
+//    $decoded_array = (array)$decoded;
+//    print_r($decoded_array);
+//  } catch (\Exception $e) {
+//    echo 'Error: ' . $e->getMessage();
+//  }
   // Возвращаем токен клиенту
   http_response_code(201); // Created
   echo json_encode(['token' => $jwt]);

@@ -9,6 +9,8 @@ require("Firebase\Key.php");
 
 
 $JWT = new JWT();
+$error = "";
+$decoded = "";
 // Проверяем, является ли запрос preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   header("HTTP/1.1 204 No Content");
@@ -39,13 +41,15 @@ try {
   // Проверяем данные токена
   if ($decoded->exp < time()) {
     http_response_code(401); // Unauthorized
-    echo json_encode(['error' => 'Token has expired']);
+//    echo json_encode(['error' => 'Token has expired']);
+//    $error = 'Token has expired';
     exit;
   }
 
   // Если всё хорошо, продолжаем обработку запроса
-  echo json_encode(['message' => 'Token is valid', 'data' => $decoded]);
+ // echo json_encode(['message' => 'Token is valid', 'token_data' => $decoded]);
 } catch (\Exception $e) {
   http_response_code(401); // Unauthorized
-  echo json_encode(['error' => 'Invalid token: ' . $e->getMessage()]);
+//  echo json_encode(['error' => 'Invalid token: ' . $e->getMessage()]);
+  $error = $e->getMessage();
 }

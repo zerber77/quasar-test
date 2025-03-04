@@ -1,7 +1,7 @@
 <?php
 
 namespace Firebase\JWT;
-
+//
 use ArrayAccess;
 use DateTime;
 use DomainException;
@@ -12,6 +12,8 @@ use OpenSSLCertificate;
 use stdClass;
 use UnexpectedValueException;
 
+include ("BeforeValidException.php");
+include ("ExpiredException.php");
 /**
  * JSON Web Token implementation, based on this spec:
  * https://tools.ietf.org/html/rfc7519
@@ -147,7 +149,7 @@ class JWT
             $sig = self::signatureToDER($sig);
         }
         if (!self::verify("{$headb64}.{$bodyb64}", $sig, $key->getKeyMaterial(), $header->alg)) {
-            throw new UnexpectedValueException('Signature verification failed');
+            throw new SignatureInvalidException('Signature verification failed');
         }
 
         // Check the nbf if it is defined. This is the time that the

@@ -20,4 +20,5 @@ while ($row = mysqli_fetch_assoc($result)) {
   $arr[] = $row;
 }
 
-echo json_encode($arr);
+if ($error == '') echo json_encode(['token_data' => $decoded, 'data' => $arr]);
+else echo json_encode(['Error' => $error]);

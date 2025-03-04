@@ -123,6 +123,8 @@ import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
 import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
 import useMessageVars from "components/modules/messages/getMessageVars";
 
+
+///НАСТРОЙКИ ПИРОГОВ (вынести в компонент надо)
 const options = ref({
   chart: {
     width: 580,
@@ -186,7 +188,7 @@ const options_ru = ref({
     }
   }]
 })
-
+////////////////////////////////////////////////////////////////////////////////////////
 const  series = ref([])
 const  series_ru = ref([])
 const loading = ref(false)
@@ -215,11 +217,6 @@ const clearCharts = () =>{
   news.value.length = 0
 }
 
-// Функция для получения базовой формы слова (приводим к нижнему регистру)
-function getBaseWord(word) {
-  return word.toLowerCase().replace(/(а|у|ю|и|ы|ой|ом|е|ям)$/iu, '');
-}
-
 // Функция преобразования по языкам и передача на графику
 const wordsArrayTransform = (arr) =>{
   clearCharts()
@@ -230,27 +227,13 @@ const wordsArrayTransform = (arr) =>{
   })
   russian = arr.filter(item => isRussian(item.word));
   console.log('RUS',russian)
-  // let result = russian.reduce((acc, item) => {
-  //   let baseWord = getBaseWord(item.word);
-  //   let existingItem = acc.find(el => el.word.toLowerCase() === baseWord);
-  //
-  //   if (existingItem) {
-  //     // Если слово уже существует, суммируем частоты
-  //     existingItem.frequency = (parseInt(existingItem.frequency) + parseInt(item.frequency)).toString();
-  //   } else {
-  //     // Иначе добавляем новое слово
-  //     acc.push({ date: item.date, word: baseWord, frequency: item.frequency });
-  //   }
-  //   return acc;
-  // }, []);
-
   russian.forEach((item) => {
     options_ru.value.labels.push(item.word)
     series_ru.value.push(Number(item.frequency))
   })
 }
 
-onMounted(async ()=>{
+const loadWords = async () => {
   try {
     const {response} = await  getWordOfDay(selectedDate.value)
     const data = response.value
@@ -258,30 +241,23 @@ onMounted(async ()=>{
       setErrorMessage(`Для даты ${selectedDate.value} данные отсутствуют`)
     }
     else wordsArrayTransform(data)
-  }catch (err){
-    setErrorMessage(`Ошибка ${err}`)
+  }catch (err){   ////все ошибки токена возвращают код 401
+    if (err === 'Request failed with status code 401') setErrorMessage(`Ошибка, вы не зарегистрированы в системе. Зарегистрируйтесь или войдите на сайт.`)
   }
+}
 
-
+onMounted( ()=>{
+  loadWords()
 })
 
-const dateChanged = async (date) => {
+const dateChanged = (date) => {
   selectedDate.value = date
   if (!selectedDate.value) {
     setErrorMessage(`Дата не выбрана`)
     return
   }
   clearCharts()
-  try {
-    const {response} = await  getWordOfDay(selectedDate.value)
-    const data = response.value
-    if (!data.length) {
-      setErrorMessage(`Для даты ${selectedDate.value} данные отсутствуют`)
-    }
-    else wordsArrayTransform(data)
-  }catch (err){
-    setErrorMessage(`Ошибка ${err}`)
-  }
+  loadWords()
 }
 
 const loadNews = async (wordParam ) =>{
