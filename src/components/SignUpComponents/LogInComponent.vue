@@ -18,7 +18,7 @@
         <input
           type="password"
           id="password"
-          v-model="formData.user.password"
+          v-model="formData.password"
           required
         />
       </div>
