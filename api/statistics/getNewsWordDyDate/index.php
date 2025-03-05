@@ -1,23 +1,17 @@
 <?php
+header('Access-Control-Allow-Origin: http://localhost:9000');
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 $word = '';
-if(isset($_GET['word'])) {
-  $word = $_GET['word'];
-}
+if(isset($_GET['word'])) $word = $_GET['word'];
+
 $date = '';
-if(isset($_GET['date'])) {
-  $date = $_GET['date'];
-}
+if(isset($_GET['date'])) $date = $_GET['date'];
+
 $strong = '';
-if(isset($_GET['strong'])) {
-  $strong = $_GET['strong'];
-}
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Access-Control-Allow-Credentials: true');
-session_set_cookie_params(3600*24*3);
-session_start();
+if(isset($_GET['strong'])) $strong = $_GET['strong'];
+
 //include ("../../../pages/const.php");
 include("../../const.php");
 if ($strong == 'true') $result = mysqli_query($dbcnx, "SELECT * FROM mynews WHERE time_new LIKE '$date%' AND (text LIKE '% $word %' OR head LIKE '% $word %')");

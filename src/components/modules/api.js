@@ -4,8 +4,8 @@
 import axios from "axios";
 
 const api = axios.create({
- //baseURL: 'http://quasar-test/',
-  baseURL: '/',
+ baseURL: 'http://quasar-test/',
+ // baseURL: '/',
   // auth:{
   //     username: 'admin',
   //     password: 'admin'
@@ -15,7 +15,7 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(config => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; // Добавляем токен в заголовок
     }

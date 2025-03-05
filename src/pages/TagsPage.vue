@@ -237,12 +237,17 @@ const loadWords = async () => {
   try {
     const {response} = await  getWordOfDay(selectedDate.value)
     const data = response.value
-    if (!data.length) {
+    if (data.error){
+      setErrorMessage(`Ошибка:`+ data.error )
+      return
+    }
+    if (!data.data.length) {
       setErrorMessage(`Для даты ${selectedDate.value} данные отсутствуют`)
     }
-    else wordsArrayTransform(data)
+    else wordsArrayTransform(data.data)
   }catch (err){   ////все ошибки токена возвращают код 401
     if (err === 'Request failed with status code 401') setErrorMessage(`Ошибка, вы не зарегистрированы в системе. Зарегистрируйтесь или войдите на сайт.`)
+    else setErrorMessage(`Неполадки на сервере, попробуйте позже.`)
   }
 }
 

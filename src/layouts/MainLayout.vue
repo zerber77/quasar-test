@@ -16,29 +16,17 @@
         </q-toolbar-title>
 
 <!--        <q-separator dark vertical />-->
-<!--        <q-item >-->
-<!--            <q-btn-dropdown color="primary" label="Агентства">-->
-<!--              <q-list>-->
 
-<!--                <q-item-->
-<!--                  v-for="link in essentialLinks"-->
-<!--                  clickable-->
-<!--                  v-close-popup-->
-<!--                  @click="getNews(link.agency)">-->
-<!--                  <q-item-section>-->
-<!--                    <q-item-label>{{link.agency}}</q-item-label>-->
-<!--                  </q-item-section>-->
-<!--                </q-item>-->
+        <template v-if="authorised">
+          <q-item-section avatar>
+            <q-icon name="person" />
+          </q-item-section>
+          <q-btn to="/SignUpPage/" stretch flat label="ВЫЙТИ" />
+        </template>
 
-<!--              </q-list>-->
-<!--            </q-btn-dropdown>-->
-
-<!--        </q-item>-->
-
-<!--        <q-separator dark vertical />-->
-<!--        <q-item  to="/" v-ripple exact>-->
-<!--          <q-toolbar-title text-color="white" >Штаты</q-toolbar-title>-->
-<!--        </q-item>-->
+        <template v-else>
+          <q-btn to="/SignUpPage/" stretch flat label="ВОЙТИ" />
+        </template>
 
       </q-toolbar>
     </q-header>
@@ -72,7 +60,7 @@
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import {defineComponent, onMounted, ref} from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import {getAgencies} from "components/modules/getAgencies";
@@ -116,33 +104,20 @@ const linksList = [
     icon: 'star',
     link: '/'
   },
-
-
 ]
 
-
-export default defineComponent({
-  name: 'MainLayout',
-  components: {
-    EssentialLink
-  },
-
-  setup () {
     const leftDrawerOpen = ref(false)
- //   let essentialLinks = ref({})
-    // onMounted(async ()=>{
-    //   const {response} = await  getAgencies()
-    //   essentialLinks.value = response.value
-    // })
-
-    return {
- //     essentialLinks,
-      leftDrawerOpen,
-      linksList,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      },
+    const authorised = ref(false)
+    const toggleLeftDrawer = () => {
+      leftDrawerOpen.value = !leftDrawerOpen.value
     }
-  }
-})
+    onMounted(()=>{
+      const token = localStorage.getItem('authToken')
+      if (token){
+        authorised.value = true;
+      }
+      else authorised.value = false
+    })
+
+
 </script>

@@ -9,6 +9,13 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 include("../../const.php");
 require("../../auth/VerifyToken.php");
 
+$token = verifyToken($key);
+//echo  json_encode(['data' => $token]);
+if (array_key_exists('error', $token)) {
+  echo json_encode ($token);
+  exit;
+}
+
 $date = '';
 if(isset($_GET['date'])) {
   $date = $_GET['date'];
@@ -20,5 +27,5 @@ while ($row = mysqli_fetch_assoc($result)) {
   $arr[] = $row;
 }
 
-if ($error == '') echo json_encode(['token_data' => $decoded, 'data' => $arr]);
-else echo json_encode(['Error' => $error]);
+echo json_encode(['token_data' => $token, 'data' => $arr]);
+
