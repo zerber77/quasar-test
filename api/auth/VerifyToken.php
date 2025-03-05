@@ -3,8 +3,8 @@
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-require("Firebase\JWT.php");
-require("Firebase\Key.php");
+require("Firebase/JWT.php");
+require("Firebase/Key.php");
 
 function verifyToken($key):array
 {

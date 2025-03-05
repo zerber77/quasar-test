@@ -9,8 +9,8 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-require("..\Firebase\JWT.php");
-require("..\Firebase\Key.php");
+require("../Firebase/JWT.php");
+require("../Firebase/Key.php");
 
 //$JWT = new JWT();
 // Конфигурация подключения к БД
