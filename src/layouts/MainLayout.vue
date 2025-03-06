@@ -1,4 +1,12 @@
 <template>
+  <ErrorMessageComponent
+    v-model = "error"
+    :errorMessage = "errorMessage"
+  />
+  <HelpMessageComponent
+    v-model = "help"
+    :helpMessage = "helpMessage"
+  />
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
@@ -17,11 +25,14 @@
 
 <!--        <q-separator dark vertical />-->
 
-        <template v-if="authorised">
+        <template v-if=" authorised.isAuthenticated">
           <q-item-section avatar>
             <q-icon name="person" />
+            <q-item-label v-if="authorised.user">
+              {{authorised.user}}
+            </q-item-label>
           </q-item-section>
-          <q-btn to="/SignUpPage/" stretch flat label="ВЫЙТИ" />
+          <q-btn to="/SignUpPage/" @click.prevent="logOut" stretch flat label="ВЫЙТИ" />
         </template>
 
         <template v-else>
@@ -61,11 +72,14 @@
 </template>
 
 <script setup>
-import {defineComponent, onMounted, ref} from 'vue'
+import {defineComponent, onMounted, provide, reactive, ref} from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
-import {getAgencies} from "components/modules/getAgencies";
 import routes from "src/router/routes";
 import { useRouter } from 'vue-router';
+import {isTokenValid} from "components/modules/auth/isTokenValid";
+import useMessageVars from "components/modules/messages/getMessageVars";
+import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
+import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
 
 const linksList = [
   {
@@ -107,17 +121,44 @@ const linksList = [
 ]
 
     const leftDrawerOpen = ref(false)
-    const authorised = ref(false)
     const toggleLeftDrawer = () => {
       leftDrawerOpen.value = !leftDrawerOpen.value
     }
-    onMounted(()=>{
+
+    const {help, error,helpMessage,errorMessage, setHelpMessage, setErrorMessage} = useMessageVars()
+
+    const authorised =  reactive({
+      isAuthenticated: false,
+      user: null
+    });
+    provide('authorised', authorised);
+
+    onMounted(async ()=>{
       const token = localStorage.getItem('authToken')
       if (token){
-        authorised.value = true;
+        try {
+          const {response} = await  isTokenValid()
+          if(response.value.error){
+            setErrorMessage(response.value.error)
+            authorised.isAuthenticated = false;
+          }
+          else {
+            authorised.isAuthenticated = true;
+          }
+
+        }catch (err){
+
+        }
       }
-      else authorised.value = false
+      else authorised.isAuthenticated = false
     })
+
+    const logOut =() => {
+      localStorage.removeItem('authToken')
+      authorised.isAuthenticated = false
+      authorised.user = null
+    }
+
 
 
 </script>

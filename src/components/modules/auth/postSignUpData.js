@@ -1,9 +1,9 @@
 //// Отправка данных о новой должности
 
-import {usePost} from "./axiosPostApi";
+import {usePost} from "../axiosPostApi";
 
-export async function postLogInData(personData){
-  const {response:personID, request} = usePost('api/auth/login/', personData)
+export async function postSignUpData(personData){
+  const {response:personID, request} = usePost('api/auth/signup/', personData)
   try {
     await request()
   }catch (e) {

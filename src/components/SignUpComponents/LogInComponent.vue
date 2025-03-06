@@ -1,4 +1,12 @@
 <template>
+  <ErrorMessageComponent
+    v-model = "error"
+    :errorMessage = "errorMessage"
+  />
+  <HelpMessageComponent
+    v-model = "help"
+    :helpMessage = "helpMessage"
+  />
   <div class="signup-form">
     <h3>Войти на сайт</h3>
     <form @submit.prevent="handleSubmit">
@@ -23,26 +31,31 @@
         />
       </div>
       <!-- Кнопка отправки формы -->
-      <button type="submit">Зарегистрироваться</button>
-      <!-- Сообщение об ошибке -->
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+      <button type="submit">ВОЙТИ</button>
+
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
-import {postSignUpData} from "components/modules/postSignUpData";
-import {postLogInData} from "components/modules/postLogInData";
+import {inject, ref} from 'vue';
 
-// Реактивные переменные
+import {postLogInData} from "components/modules/auth/postLogInData";
+import useMessageVars from "components/modules/messages/getMessageVars";
+import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
+import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
+
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const authorised = inject('authorised');
+
 const formData = ref({
   login: '',
   password: ''
 })
 
-const errorMessage = ref('');
+const {help, error,helpMessage,errorMessage, setHelpMessage, setErrorMessage} = useMessageVars()
 
 // Обработчик отправки формы
 const handleSubmit = async () => {
@@ -50,22 +63,29 @@ const handleSubmit = async () => {
     // Отправляем данные на сервер
     const response = await postLogInData( {
       login: formData.value.login,
-      user: formData.value.password
+      password: formData.value.password
     });
 
     // Если всё успешно, перенаправляем пользователя или показываем сообщение успеха
     console.log('Регистрация успешна:', response.personID.value.token);
     localStorage.setItem('authToken', response.personID.value.token);
-    alert('Вы успешно зарегистрированы!');
+    authorised.isAuthenticated = true
+    authorised.user =  formData.value.login
+    setHelpMessage('Вы успешно авторизовались!')
+//    routes.push('NewsPage/')
+    setTimeout(() =>{router.push({path:'/'})},1000)
+    //alert('Вы усешно автоизовались!');
     // Можно добавить редирект на страницу входа или другую страницу
   } catch (error) {
     // Обработка ошибок
     if (error.response && error.response.data && error.response.data.error) {
-      errorMessage.value = error.response.data.error;
+//      errorMessage.value = error.response.data.error;
+      setErrorMessage(error.response.data.error)
     } else {
-      errorMessage.value = 'Произошла ошибка при регистрации. Пожалуйста, попробуйте позже.';
+//      errorMessage.value = 'Произошла ошибка при регистрации. Пожалуйста, попробуйте позже.';
+      setErrorMessage(`Произошла ошибка при авторизации. Неверный логин или пароль.`)
     }
-    console.error('Ошибка регистрации:', error);
+    console.error('Ошибка авторизации:', error);
   }
 }
 </script>

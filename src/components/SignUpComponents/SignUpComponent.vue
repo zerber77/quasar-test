@@ -53,7 +53,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-import {postSignUpData} from "components/modules/postSignUpData";
+import {postSignUpData} from "components/modules/auth/postSignUpData";
 
 // Реактивные переменные
 const formData = ref({
