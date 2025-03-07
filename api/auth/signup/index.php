@@ -11,13 +11,6 @@ use Firebase\JWT\Key;
 require("../Firebase/JWT.php");
 require("../Firebase/Key.php");
 
-//$JWT = new JWT();
-// Конфигурация подключения к БД
-//$host = 'localhost';
-//$dbname = 'your_database_name';
-//$username = 'your_db_username';
-//$password = 'your_db_password';
-
 include("../../const.php");
 $options = [
   PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -48,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $stmt = $pdo->prepare("SELECT id FROM users WHERE login = :login");
   $stmt->execute(['login' => $login]);
   if ($stmt->fetch()) {
-    http_response_code(409); // Conflict
-    echo json_encode(['error' => 'Login already exists']);
+ //   http_response_code(409);
+    echo json_encode( ['error' => 'Такой логин уже существует']);
     exit;
   }
 
@@ -66,8 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   ]);
 
   if (!$result) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Failed to register user']);
+    echo json_encode(['error' => 'Ошибка на сервере, попробуйте еще раз или позже']);
     exit;
   }
 

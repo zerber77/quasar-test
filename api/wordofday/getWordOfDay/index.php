@@ -10,7 +10,6 @@ include("../../const.php");
 require("../../auth/VerifyToken.php");
 
 $token = verifyToken($key);
-//echo  json_encode(['data' => $token]);
 if (array_key_exists('error', $token)) {
   echo json_encode ($token);
   exit;

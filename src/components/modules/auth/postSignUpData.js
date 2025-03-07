@@ -3,14 +3,14 @@
 import {usePost} from "../axiosPostApi";
 
 export async function postSignUpData(personData){
-  const {response:personID, request} = usePost('api/auth/signup/', personData)
+  const {response:data, request} = usePost('api/auth/signup/', personData)
   try {
     await request()
   }catch (e) {
-    console.log('ERROR in createRank usePost',e)
+    console.log('ERROR in createRank postSignUpData',e)
     throw e
   }
   //////здесь обрабатываем результат как вам надо
-  console.log(personID)
-  return {personID}
+  console.log(data)
+  return {data}
 }
