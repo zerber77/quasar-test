@@ -117,7 +117,7 @@
 
 <script setup>
 
-import {ref} from 'vue'
+import {inject, onMounted, ref} from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import CalendarComponent from "components/IndexComponents/CalendarComponent.vue";
 import ChartBarComponent from "components/Chart/ChartBarComponent.vue";
@@ -137,6 +137,7 @@ let count = ref({})
 let news = ref([])
 let filteredNews = ref([])
 
+const authorised = inject('authorised');
 const {help, error,helpMessage,errorMessage, setHelpMessage, setErrorMessage} = useMessageVars()
 
 let options = ref([])
@@ -144,6 +145,13 @@ const series = ref([])
 /////оси для статистики агентств
 let optionsX = ref([])
 let seriesY = ref([])
+
+onMounted(()=>{
+  if (!authorised.isAuthenticated) {
+    calcButton.value = false
+    setErrorMessage(`Вы не авторизованы на сайте. Для получения доступа ко всем функциям необходимо зарегистрироваться`)
+  }
+})
 
 const loadNews = async (date, word ) =>{
   if (!word || !date) return
@@ -170,25 +178,29 @@ const loadNews = async (date, word ) =>{
 const  getDatesArray = async (start, end) => {
   const arr = [];
   loading.value = true
-  while(start <= end) {
-    if (!loading.value) break
-    ////отлов ишибок try!
-    const {response} = await getWordCountByDate(start, word.value)//   await axios.get('http://quasar-test/api/')
-    count.value = response.value
-    options.value.push(start)
-    series.value.push(count.value)
-    // options.value.xaxis.categories.push(start)
-    // series.value[0].data.push(count.value)
-    arr.push(new Date(start).toISOString().slice(0, 10))
-    const dt = new Date((start))//.toISOString().slice(0, 10)
-    dt.setDate(dt.getDate() + 1)
-    start = dt.toISOString().slice(0,10)
-  }
-  if (series.value.every(item => item === '0')) {
+  try {
+    while (start <= end) {
+      if (!loading.value) break
+      ////отлов ишибок try!
+      const {response} = await getWordCountByDate(start, word.value)//   await axios.get('http://quasar-test/api/')
+      count.value = response.value
+      options.value.push(start)
+      series.value.push(count.value)
+      // options.value.xaxis.categories.push(start)
+      // series.value[0].data.push(count.value)
+      arr.push(new Date(start).toISOString().slice(0, 10))
+      const dt = new Date((start))//.toISOString().slice(0, 10)
+      dt.setDate(dt.getDate() + 1)
+      start = dt.toISOString().slice(0, 10)
+    }
+    if (series.value.every(item => item === '0')) {
       setErrorMessage(`Для выбранного диапазона дат данные отсутствуют`)
+    }
+    loading.value = false
+    return arr
+  }catch (err){
+    setErrorMessage(`Ошибка сервера, попробуйте позже`)
   }
-  loading.value = false
-  return arr;
 }
 
 const  click = async ()=>{
@@ -204,7 +216,8 @@ const  click = async ()=>{
 }
 
 function setRange (range) {
-  calcButton.value = true
+  if (!authorised.isAuthenticated) calcButton.value = false
+  else calcButton.value = true
   if (typeof range === 'string') {
     dateRange.value.from = dateRange.value.to = range ///ыбрана одна дата
     return

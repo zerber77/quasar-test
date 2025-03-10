@@ -147,7 +147,7 @@ const linksList = [
           }
 
         }catch (err){
-
+          setErrorMessage(err)
         }
       }
       else authorised.isAuthenticated = false

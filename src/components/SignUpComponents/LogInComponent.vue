@@ -77,15 +77,9 @@ const handleSubmit = async () => {
     //alert('Вы усешно автоизовались!');
     // Можно добавить редирект на страницу входа или другую страницу
   } catch (error) {
-    // Обработка ошибок
-    if (error.response && error.response.data && error.response.data.error) {
-//      errorMessage.value = error.response.data.error;
-      setErrorMessage(error.response.data.error)
-    } else {
-//      errorMessage.value = 'Произошла ошибка при регистрации. Пожалуйста, попробуйте позже.';
+
       setErrorMessage(`Произошла ошибка при авторизации. Неверный логин или пароль.`)
-    }
-    console.error('Ошибка авторизации:', error);
+      console.error('Ошибка авторизации:', error);
   }
 }
 </script>
