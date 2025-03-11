@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $user = $stmt->fetch();
 
   if (!$user || !password_verify($plainPassword, $user['password'])) {
-    http_response_code(401); // Unauthorized
-    echo json_encode(['error' => 'Invalid login or password']);
+//    http_response_code(401); // Unauthorized
+    echo json_encode(['error' => 'Неверный логин или пароль']);
     exit;
   }
 

@@ -3,7 +3,7 @@
 import {usePost} from "../axiosPostApi";
 
 export async function postLogInData(personData){
-  const {response:personID, request} = usePost('api/auth/login/', personData)
+  const {response:data, request} = usePost('api/auth/login/', personData)
   try {
     await request()
   }catch (e) {
@@ -11,6 +11,6 @@ export async function postLogInData(personData){
     throw e
   }
   //////здесь обрабатываем результат как вам надо
-  console.log(personID)
-  return {personID}
+  console.log(data)
+  return {data}
 }

@@ -64,11 +64,15 @@ const handleSubmit = async () => {
     const response = await postLogInData( {
       login: formData.value.login,
       password: formData.value.password
-    });
-
+    })
+    debugger
+    if(response.data.value.error){
+      setErrorMessage(response.data.value.error)
+      return
+    }
     // Если всё успешно, перенаправляем пользователя или показываем сообщение успеха
-    console.log('Регистрация успешна:', response.personID.value.token);
-    localStorage.setItem('authToken', response.personID.value.token);
+    console.log('Регистрация успешна:', response.data.value.token);
+    localStorage.setItem('authToken', response.data.value.token);
     authorised.isAuthenticated = true
     authorised.user =  formData.value.login
     setHelpMessage('Вы успешно авторизовались!')
@@ -77,8 +81,7 @@ const handleSubmit = async () => {
     //alert('Вы усешно автоизовались!');
     // Можно добавить редирект на страницу входа или другую страницу
   } catch (error) {
-
-      setErrorMessage(`Произошла ошибка при авторизации. Неверный логин или пароль.`)
+      setErrorMessage(`Ошибка на сервере, попробуйте позже.`)
       console.error('Ошибка авторизации:', error);
   }
 }
