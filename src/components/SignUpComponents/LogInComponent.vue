@@ -65,7 +65,6 @@ const handleSubmit = async () => {
       login: formData.value.login,
       password: formData.value.password
     })
-    debugger
     if(response.data.value.error){
       setErrorMessage(response.data.value.error)
       return

@@ -10,6 +10,7 @@ const routes = [
       { name:'TagsPage',path: 'TagsPage/', component: () => import('pages/TagsPage.vue') },
       { name:'WorldMapPage',path: 'WorldMapPage/', component: () => import('pages/WorldMapPage.vue') },
       { name:'SignUpPage',path: 'SignUpPage/', component: () => import('pages/SignUpPage.vue') },
+      { name:'ReviewPage',path: 'ReviewPage/', component: () => import('pages/ReviewPage.vue') },
     ]
   },
 

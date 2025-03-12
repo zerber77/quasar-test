@@ -82,12 +82,12 @@ import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
 import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
 
 const linksList = [
-  {
-    title: 'ВОЙТИ НА САЙТ',
-    caption: '',
-    icon: 'person',
-    link: '/SignUpPage/'
-  },
+  // {
+  //   title: 'ВОЙТИ НА САЙТ',
+  //   caption: '',
+  //   icon: 'person',
+  //   link: '/SignUpPage/'
+  // },
   {
     title: 'СЕГОДНЯ В НОВОСТЯХ',
     caption: '',
@@ -113,11 +113,18 @@ const linksList = [
     link: '/WorldMapPage/'
   },
   {
+    title: 'ОТЗЫВЫ',
+    caption: '',
+    icon: 'note',
+    link: '/ReviewPage/'
+  },
+  {
     title: 'О ПРОЕКТЕ',
     caption: '',
     icon: 'star',
     link: '/'
   },
+
 ]
 
     const leftDrawerOpen = ref(false)
@@ -140,10 +147,11 @@ const linksList = [
           const {response} = await  isTokenValid()
           if(response.value.error){
             setErrorMessage(response.value.error)
-            authorised.isAuthenticated = false;
+            authorised.isAuthenticated = false
           }
           else {
-            authorised.isAuthenticated = true;
+            authorised.isAuthenticated = true
+            authorised.user = response.value.token_data.decoded_token.data.login
           }
 
         }catch (err){
