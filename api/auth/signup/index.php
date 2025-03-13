@@ -18,7 +18,7 @@ $options = [
 ];
 
 try {
-  $pdo = new PDO("mysql:host=$dblocation;dbname=$dbname;charset=utf8mb4", $dbuser, $dbpasswd, $options);
+  $pdo = new PDO("mysql:host=$db_analitika;dbname=$dbname_analitika;charset=utf8mb4", $dbuser_analitika, $dbpasswd_analitika, $options);
 } catch (\PDOException $e) {
   throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $login = $data['login'];
 
   // Проверяем существование логина <button class="citation-flag" data-index="8">
-  $stmt = $pdo->prepare("SELECT id FROM users WHERE login = :login");
+  $stmt = $pdo->prepare("SELECT user_id FROM users WHERE login = :login");
   $stmt->execute(['login' => $login]);
   if ($stmt->fetch()) {
  //   http_response_code(409);
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    // "nbf" => time() + 60,
     "exp" => time() + 3600,
     "data" => [
-      "id" => $pdo->lastInsertId(),
+      "user_id" => $pdo->lastInsertId(),
       "login" => $login
     ]
   ];

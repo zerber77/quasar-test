@@ -19,7 +19,7 @@ $options = [
 ];
 
 try {
-  $pdo = new PDO("mysql:host=$dblocation;dbname=$dbname;charset=utf8mb4", $dbuser, $dbpasswd, $options);
+  $pdo = new PDO("mysql:host=$db_analitika;dbname=$dbname_analitika;charset=utf8mb4", $dbuser_analitika, $dbpasswd_analitika, $options);
 } catch (\PDOException $e) {
   throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
@@ -39,13 +39,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $plainPassword = $data['password'];
 
   // Проверяем существование пользователя с указанным логином
-  $stmt = $pdo->prepare("SELECT id, password FROM users WHERE login = :login");
-  $stmt->execute(['login' => $login]);
+  try {
+    $stmt = $pdo->prepare("SELECT user_id, password FROM users WHERE login = :login");
+    $stmt->execute(['login' => $login]);
+  }catch (\PDOException $e) {
+    echo json_encode(['error' => 'Ошибка БД'.$e->getMessage()]);
+    exit;
+  }
   $user = $stmt->fetch();
 
   if (!$user || !password_verify($plainPassword, $user['password'])) {
 //    http_response_code(401); // Unauthorized
-    echo json_encode(['error' => 'Неверный логин или пароль']);
+    echo json_encode(['error' => 'Неверный логин / пароль или вы не зарегистрированы в системе']);
     exit;
   }
 
@@ -57,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // "nbf" => time() + 60,
     "exp" => time() + 3600,
     "data" => [
-      "id" => $user['id'],
+      "user_id" => $user['user_id'],
       "login" => $login
     ]
   ];
