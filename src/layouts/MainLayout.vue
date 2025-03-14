@@ -28,8 +28,8 @@
         <template v-if=" authorised.isAuthenticated">
           <q-item-section avatar>
             <q-icon name="person" />
-            <q-item-label v-if="authorised.user">
-              {{authorised.user}}
+            <q-item-label v-if="authorised.login">
+              {{authorised.login}}
             </q-item-label>
           </q-item-section>
           <q-btn to="/SignUpPage/" @click.prevent="logOut" stretch flat label="ВЫЙТИ" />
@@ -136,7 +136,9 @@ const linksList = [
 
     const authorised =  reactive({
       isAuthenticated: false,
-      user: null
+      login: null,
+      name:null,
+      review_sended: false
     });
     provide('authorised', authorised);
 
@@ -151,7 +153,8 @@ const linksList = [
           }
           else {
             authorised.isAuthenticated = true
-            authorised.user = response.value.token_data.decoded_token.data.login
+            authorised.login = response.value.token_data.decoded_token.data.login
+            authorised.name = response.value.token_data.decoded_token.data.name
           }
 
         }catch (err){
@@ -165,6 +168,7 @@ const linksList = [
       localStorage.removeItem('authToken')
       authorised.isAuthenticated = false
       authorised.user = null
+ //     authorised.review_sended = false
     }
 
 

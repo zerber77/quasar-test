@@ -8,10 +8,18 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-require("../Firebase/JWT.php");
-require("../Firebase/Key.php");
+require("../auth/Firebase/JWT.php");
+require("../auth/Firebase/Key.php");
 // Конфигурация подключения к БД
-include("../../const.php");
+include("../const.php");
+require("../auth/VerifyToken.php");
+
+
+$token = verifyToken($key);
+if (array_key_exists('error', $token)) {
+  echo json_encode ($token);
+  exit;
+}
 
 $options = [
   PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -29,48 +37,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $json = file_get_contents('php://input');
   $data = json_decode($json, true);
 
-  if (!$data || !isset($data['login']) || !isset($data['password'])) {
+  if (!$data || !isset($data['login']) || !isset($data['name']) || !isset($data['review'])) {
     http_response_code(400);
     echo json_encode(['error' => 'Invalid request data']);
     exit;
   }
 
   $login = $data['login'];
-  $plainPassword = $data['password'];
+  $name = $data['name'];
+  $review = $data['review'];
 
   // Проверяем существование пользователя с указанным логином
   try {
-    $stmt = $pdo->prepare("SELECT user_id, name, password FROM users WHERE login = :login");
-    $stmt->execute(['login' => $login]);
+    $stmt = $pdo->prepare("SELECT user_id, name, login FROM users WHERE login = :login AND name = :name");
+    $stmt->execute(['login' => $login, 'name' =>$name]);
   }catch (\PDOException $e) {
     echo json_encode(['error' => 'Ошибка БД'.$e->getMessage()]);
     exit;
   }
   $user = $stmt->fetch();
+  if (!$user) {
+    echo json_encode(['error' => 'Такой пользователь не зарегистрированы в системе']);
+    exit;
+  }
+  $user_id = $user['user_id'];
+  // Сохраняем пользователя в БД
+  $stmt = $pdo->prepare("INSERT INTO reviews (user_id, review) VALUES (:user_id, :review)");
+  $result = $stmt->execute([
+    'user_id' => $user_id,
+    'review' => $review,
+  ]);
 
-  if (!$user || !password_verify($plainPassword, $user['password'])) {
-//    http_response_code(401); // Unauthorized
-    echo json_encode(['error' => 'Неверный логин / пароль или вы не зарегистрированы в системе']);
+  if (!$result) {
+    echo json_encode(['error' => 'Ошибка на сервере, попробуйте еще раз или позже']);
     exit;
   }
 
-    // Генерируем JWT токен
-  $payload = [
-    "iss" => "http://news-analitika.org",
-    "aud" => "http://news-analitika.com",
-    "iat" => time(),
-    // "nbf" => time() + 60,
-    "exp" => time() + 3600,
-    "data" => [
-      "user_id" => $user['user_id'],
-      "login" => $login,
-      "name" => $user['name'],
-    ]
-  ];
-  $jwt = JWT::encode($payload, $key,'HS256');
-
-    // Возвращаем токен клиенту
-    http_response_code(200); // OK
-    echo json_encode(['token' => $jwt]);
+  // Возвращаем токен клиенту
+  http_response_code(200); // OK
+  echo json_encode(['token' => $jwt]);
 }
 ?>
+

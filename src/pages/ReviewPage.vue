@@ -9,25 +9,120 @@
   />
   <q-page>
     <h1 class="text-center text-green-10" style="font-size: 3rem">Отзывы и предложения</h1>
+    <div v-if="authorised.isAuthenticated && !authorised.review_sended" class="q-pa-md">
+      <!-- Кнопка или textarea -->
+      <transition name="fade" mode="out-in">
+        <q-btn
+          v-if="!showTextarea"
+          color="primary"
+          label="Написать отзыв"
+          @click="showTextarea = true"
+          class=""
+        />
+        <div v-else class="review-container">
+          <p>Имя:{{authorised.name}} Логин:{{authorised.name}}</p>
+          <q-input
+            v-model="reviewText"
+            type="textarea"
+            outlined
+            :rules="[validateReview]"
+            placeholder="Введите ваш отзыв..."
+            class="custom-textarea"
+            style="max-width: 50rem"
+            ref="reviewInput"
+          />
+          <q-btn
+            color="primary"
+            label="Отправить отзыв"
+            :disable="!isReviewValid"
+            @click="submitReview"
+            style="max-width: 15rem"
+            class="q-mt-sm"
+          />
+        </div>
+      </transition>
+    </div>
+    <div v-else-if="authorised.review_sended">
+      <h4 class="q-ml-lg ">Ваш отзыв отправлен, спасибо за участие!</h4>
+    </div>
+
   </q-page>
 </template>
 
 <script setup>
-import {inject, onMounted, ref} from 'vue'
+import {computed, inject, onMounted, ref} from 'vue'
 import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
 import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
 import useMessageVars from "components/modules/messages/getMessageVars";
+import {postLogInData} from "components/modules/auth/postLogInData";
+import {postReview} from "components/modules/review/postReview";
+let showTextarea = ref(false); // Показывать ли textarea
+const reviewText = ref(''); // Текст отзыва
+const reviewInput = ref(null); // Референс на QInput
 
 const {help, error,helpMessage,errorMessage, setHelpMessage, setErrorMessage} = useMessageVars()
 const authorised = inject('authorised');
 
 onMounted(()=>{
-  if (!authorised.isAuthenticated) {
-    setErrorMessage(`Вы не авторизованы на сайте. Ля получения возможности писать отзывы, необходимо зарегистрироваться на сайте`)
-  }
+  loadReviews()
 })
+
+const validateReview = (value) => {
+  const regex = /^[a-zA-Zа-яА-Я0-9\s.,!?;:()-]+$/;
+  return regex.test(value) || 'Только русские/английские буквы, цифры и знаки препинания!';
+}
+
+// Вычисляемое свойство для проверки валидности
+const isReviewValid = computed(() => {
+  if (!reviewInput.value) return false;
+  return reviewInput.value.validate() && reviewText.value.trim().length > 0;
+})
+
+// Обработчик отправки отзыва
+const submitReview = async () => {
+  if (isReviewValid.value) {
+    try {
+      // Отправляем данные на сервер
+      const response = await postReview({
+        login: authorised.login,
+        name: authorised.name,
+        review: reviewText.value
+      })
+      if (response.error) {
+        setErrorMessage(response.error)
+        return
+      }
+      console.log('Отзыв отправлен:', reviewText.value);
+      reviewText.value = ''; // Очищаем поле
+      showTextarea.value = false; // Скрываем textarea
+      authorised.review_sended = true
+    }catch (err){
+      setErrorMessage(err)
+    }
+
+  }
+}
+
+const loadReviews = () =>{
+
+}
 </script>
 
 <style scoped>
-
+/* Анимация появления/исчезновения */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.review-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Расстояние между элементами */
+}
+.custom-textarea {
+  font-size: 1.5rem; /* Увеличиваем размер шрифта */
+}
 </style>

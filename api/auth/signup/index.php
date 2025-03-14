@@ -73,7 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     "exp" => time() + 3600,
     "data" => [
       "user_id" => $pdo->lastInsertId(),
-      "login" => $login
+      "login" => $login,
+      "name" => $user['name'],
     ]
   ];
   $jwt = JWT::encode($payload, $key,'HS256');

@@ -86,13 +86,17 @@ const authorised = inject('authorised');
 
 const news = ref([])
 
-const selectedCountry = (countryEN,countryRU) => country.value = { countryRU, countryEN }
+const selectedCountry = (countryEN,countryRU) => {
+  if (!authorised.isAuthenticated) {
+    setErrorMessage(`Вы не авторизованы на сайте. Для получения доступа ко всем функциям необходимо зарегистрироваться`)
+    return
+  }
+  country.value = { countryRU, countryEN }
+}
 const  dateChanged = (date) =>  dateSelected.value = date
 
 onMounted(()=>{
-  if (!authorised.isAuthenticated) {
-    setErrorMessage(`Вы не авторизованы на сайте. Для получения доступа ко всем функциям необходимо зарегистрироваться`)
-  }
+
 })
 
 const loadNews = async () => {
