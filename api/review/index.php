@@ -5,11 +5,11 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+//use Firebase\JWT\JWT;
+//use Firebase\JWT\Key;
 
-require("../auth/Firebase/JWT.php");
-require("../auth/Firebase/Key.php");
+//require("../auth/Firebase/JWT.php");
+//require("../auth/Firebase/Key.php");
 // Конфигурация подключения к БД
 include("../const.php");
 require("../auth/VerifyToken.php");
