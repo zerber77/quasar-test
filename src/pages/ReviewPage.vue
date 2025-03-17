@@ -42,10 +42,25 @@
         </div>
       </transition>
     </div>
-    <div v-else-if="authorised.review_sended">
-      <h4 class="q-ml-lg ">Ваш отзыв отправлен, спасибо за участие!</h4>
-    </div>
+<!--    <div v-else-if="authorised.review_sended">-->
+<!--      <h4 class="q-ml-lg ">Ваш отзыв отправлен, спасибо за участие!</h4>-->
+<!--    </div>-->
+    <div v-if="reviews.length" class="q-pa-lg row q-gutter-md flex-center">
+      <q-card
+        v-for="item in reviews"
+        class="my-card text-white"
+        style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
+      >
+        <q-card-section>
+          <div class="text-h6">{{item.name}}</div>
+          <div class="text-subtitle2">{{item.created_at}}</div>
+        </q-card-section>
 
+        <q-card-section class="q-pt-none">
+          {{item.review}}
+        </q-card-section>
+      </q-card>
+    </div>
   </q-page>
 </template>
 
@@ -56,9 +71,11 @@ import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
 import useMessageVars from "components/modules/messages/getMessageVars";
 import {postLogInData} from "components/modules/auth/postLogInData";
 import {postReview} from "components/modules/review/postReview";
+import {getReviews} from "components/modules/review/getReviews";
 let showTextarea = ref(false); // Показывать ли textarea
 const reviewText = ref(''); // Текст отзыва
 const reviewInput = ref(null); // Референс на QInput
+const reviews = ref([])
 
 const {help, error,helpMessage,errorMessage, setHelpMessage, setErrorMessage} = useMessageVars()
 const authorised = inject('authorised');
@@ -93,6 +110,8 @@ const submitReview = async () => {
         return
       }
       console.log('Отзыв отправлен:', reviewText.value);
+      setHelpMessage('Ваш отзыв отправлен, спасибо за участие!')
+      await loadReviews()
       reviewText.value = ''; // Очищаем поле
       showTextarea.value = false; // Скрываем textarea
       authorised.review_sended = true
@@ -103,8 +122,13 @@ const submitReview = async () => {
   }
 }
 
-const loadReviews = () =>{
-
+const loadReviews = async () =>{
+  try {
+    const response = await getReviews()
+    reviews.value = response.response.value.reviews
+  }catch (err){
+    setErrorMessage(err)
+  }
 }
 </script>
 

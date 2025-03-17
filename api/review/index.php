@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Возвращаем токен клиенту
   http_response_code(200); // OK
-  echo json_encode(['token' => $jwt]);
+  echo json_encode(['data' => 'OK']);
 }
 ?>
 
