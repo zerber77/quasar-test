@@ -32,7 +32,6 @@
       </div>
       <!-- Кнопка отправки формы -->
       <button type="submit">ВОЙТИ</button>
-
     </form>
   </div>
 </template>
@@ -69,6 +68,7 @@ const handleSubmit = async () => {
       setErrorMessage(response.data.value.error)
       return
     }
+    
     // Если всё успешно, перенаправляем пользователя или показываем сообщение успеха
     console.log('Авторизация успешна:', response.data.value.token);
     localStorage.setItem('authToken', response.data.value.token);
