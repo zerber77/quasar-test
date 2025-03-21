@@ -26,8 +26,6 @@
         <div v-if="country.countryRU" class="col-12 col-md-4 row">
           <CalendarComponent
             :range = "false"
-            @rangeSet = ""
-            @rangeStart = ""
             @update = "dateChanged"
           />
 
@@ -46,22 +44,24 @@
             color="primary"
             @click="loadNews()"
           />
-          <q-card
-            v-if="news.length"
-            v-for="item in news"
-            class="my-card text-white"
-            style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
-          >
-            <q-card-section>
-              <div class="text-h6">{{item.head}}</div>
-              <div class="text-subtitle2">{{item.agency}} - {{item.pubdate}}</div>
-            </q-card-section>
+          <div v-if="news.length">
+            <q-card
+              v-for="item in news"
+              :key="item.id"
+              class="my-card text-white"
+              style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
+            >
+              <q-card-section>
+                <div class="text-h6">{{item.head}}</div>
+                <div class="text-subtitle2">{{item.agency}} - {{item.pubdate}}</div>
+              </q-card-section>
 
-            <q-card-section class="q-pt-none">
-              {{item.text}}
-              <div><a :href="item.link" target="_blank" style="color: yellow">Ссылка</a></div>
-            </q-card-section>
-          </q-card>
+              <q-card-section class="q-pt-none">
+                {{item.text}}
+                <div><a :href="item.link" target="_blank" style="color: yellow">Ссылка</a></div>
+              </q-card-section>
+            </q-card>
+          </div>
         </div>
     </div>
 
