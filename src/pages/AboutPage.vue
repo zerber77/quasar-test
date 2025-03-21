@@ -1,6 +1,10 @@
 <template>
   <div class="text-center q-pa-md flex flex-md-center">
-    <q-card v-for="item in cardOptions" class="my-card q-pa-md q-ma-md" >
+    <q-card 
+    v-for="item in cardOptions" 
+    :key="item.title"
+    class="my-card q-pa-md q-ma-md" 
+    >
       <q-img
         :src="item.image"
         :style="item.style"

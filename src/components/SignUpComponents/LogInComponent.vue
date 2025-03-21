@@ -32,7 +32,6 @@
       </div>
       <!-- Кнопка отправки формы -->
       <button type="submit">ВОЙТИ</button>
-
     </form>
   </div>
 </template>
@@ -69,11 +68,13 @@ const handleSubmit = async () => {
       setErrorMessage(response.data.value.error)
       return
     }
+    
     // Если всё успешно, перенаправляем пользователя или показываем сообщение успеха
-    console.log('Регистрация успешна:', response.data.value.token);
+    console.log('Авторизация успешна:', response.data.value.token);
     localStorage.setItem('authToken', response.data.value.token);
     authorised.isAuthenticated = true
-    authorised.user =  formData.value.login
+    authorised.login =  formData.value.login
+    authorised.name =  formData.value.name
     setHelpMessage('Вы успешно авторизовались!')
 //    routes.push('NewsPage/')
     setTimeout(() =>{router.push({path:'/'})},1000)

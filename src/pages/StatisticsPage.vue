@@ -86,15 +86,15 @@
     </div>
 
     <div class="col-12 q-pa-md " style="min-height: 200px">
-      <div class="q-pa-lg row q-gutter-md flex-center">
+      <div v-if="optionsX.length" class="q-pa-lg row q-gutter-md flex-center">
         <q-item>
             <q-inner-loading :showing="loadingNews">
               <q-spinner-gears size="50px" color="primary" />
             </q-inner-loading>
-        </q-item>
+        </q-item >
           <q-card
-            v-if="optionsX.length"
             v-for="item in filteredNews"
+            :key="item.id"
             class="my-card text-white"
             style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
           >
@@ -196,6 +196,7 @@ const  getDatesArray = async (start, end) => {
     if (series.value.every(item => item === '0')) {
       setErrorMessage(`Для выбранного диапазона дат данные отсутствуют`)
     }
+    
     loading.value = false
     return arr
   }catch (err){

@@ -12,8 +12,6 @@
       <div class="col-12 col-md-4 row">
         <CalendarComponent
           :range = "false"
-          @rangeSet = ""
-          @rangeStart = ""
           @update = "dateChanged"
         />
 
@@ -83,7 +81,7 @@
           @click.prevent="setHelpMessage(HelpMessages[3])"
         />
       </h3>
-      <div class="q-pa-lg row q-gutter-md flex-center">
+      <div v-if="news.length" class="q-pa-lg row q-gutter-md flex-center">
         <q-item class="title text-center q-ma-none">
           <q-inner-loading :showing="loadingNews">
             <q-spinner-gears size="50px" color="primary" />
@@ -91,8 +89,8 @@
         </q-item>
 
         <q-card
-          v-if="news.length"
           v-for="item in news"
+          :key="item.id"
           class="my-card text-white"
           style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
         >

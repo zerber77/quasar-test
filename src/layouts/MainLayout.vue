@@ -57,7 +57,7 @@
 
         <EssentialLink
           v-for="link in linksList"
-          :key="link.title"
+          :key="link.id"
           :title="link.title"
           :icon="link.icon"
           :link="link.link"
@@ -89,36 +89,42 @@ const linksList = [
   //   link: '/SignUpPage/'
   // },
   {
+    id:1,
     title: 'СЕГОДНЯ В НОВОСТЯХ',
     caption: '',
     icon: 'today',
     link: '/TagsPage/'
   },
   {
+    id:2,
     title: 'СТАТИСТИКА',
     caption: 'github.com/quasarframework',
     icon: 'list',
     link: '/StatisticsPage/'
   },
   {
+    id:3,
     title: 'НОВОСТИ',
     caption: 'quasar.dev',
     icon: 'forum',
     link: '/NewsPage/'
   },
   {
+    id:4,
     title: 'КАРТА МИРА',
     caption: '',
     icon: 'map',
     link: '/WorldMapPage/'
   },
   {
+    id:5,
     title: 'ОТЗЫВЫ',
     caption: '',
     icon: 'note',
     link: '/ReviewPage/'
   },
   {
+    id:6,
     title: 'О ПРОЕКТЕ',
     caption: '',
     icon: 'star',

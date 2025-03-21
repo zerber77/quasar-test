@@ -13,8 +13,6 @@
         <CalendarComponent
           :range = "false"
           :disabled = "loading"
-          @rangeSet = ""
-          @rangeStart = ""
           @update = "dateChanged"
         />
           <q-icon
@@ -69,6 +67,7 @@
     <div v-if="news.length" class="q-pa-lg row q-gutter-md flex-center">
       <q-card
         v-for="item in agNewsPaginated"
+        :key="item.id"
         class="my-card text-white"
         style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
       >
