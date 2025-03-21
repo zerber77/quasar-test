@@ -196,6 +196,7 @@ const  getDatesArray = async (start, end) => {
     if (series.value.every(item => item === '0')) {
       setErrorMessage(`Для выбранного диапазона дат данные отсутствуют`)
     }
+    
     loading.value = false
     return arr
   }catch (err){
