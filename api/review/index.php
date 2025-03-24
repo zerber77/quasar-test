@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['error' => 'Ошибка на сервере, попробуйте еще раз или позже']);
     exit;
   }
-
+  
   // Возвращаем токен клиенту
   http_response_code(200); // OK
   echo json_encode(['data' => 'OK']);
