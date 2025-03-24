@@ -73,9 +73,12 @@ import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
 import useMessageVars from "components/modules/messages/getMessageVars";
 import {postLogInData} from "components/modules/auth/postLogInData";
 import {postReview} from "components/modules/review/postReview";
+import { getReviews } from 'src/components/modules/review/getReviews';
 let showTextarea = ref(false); // Показывать ли textarea
 const reviewText = ref(''); // Текст отзыва
 const reviewInput = ref(null); // Референс на QInput
+const reviews = ref([]); // Массив отзывов
+
 
 const {help, error,helpMessage,errorMessage, setHelpMessage, setErrorMessage} = useMessageVars()
 const authorised = inject('authorised');
@@ -109,7 +112,9 @@ const submitReview = async () => {
         setErrorMessage(response.error)
         return
       }
+      loadReviews()
       console.log('Отзыв отправлен:', reviewText.value);
+      setHelpMessage('Отзыв отправлен')
       reviewText.value = ''; // Очищаем поле
       showTextarea.value = false; // Скрываем textarea
       authorised.review_sended = true
@@ -120,9 +125,23 @@ const submitReview = async () => {
   }
 }
 
-const loadReviews = () =>{
-
+const loadReviews = async() =>{
+  try {
+        // Отправляем данные на сервер
+        const {response} = await getReviews()
+        if (response.error) {
+          setErrorMessage(response.error)
+          return
+        }
+        console.log('Отзывы загружены:', response.value.reviews);
+        console.log('A:', authorised);
+        reviews.value = response.value.reviews
+        return
+    }catch (err){
+      setErrorMessage(err)
+    }
 }
+
 </script>
 
 <style scoped>

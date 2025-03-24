@@ -3,7 +3,7 @@
 import {useGet} from "../axiosGet";
 
 export async function getReviews(){
-  const {response, request} = useGet('api/review/getReviews/')
+  const {response, request} = useGet('api/review/getReviews/',{},true)
   try {
     await request()
   }catch (e) {
