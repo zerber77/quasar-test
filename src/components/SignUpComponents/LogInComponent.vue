@@ -72,14 +72,12 @@ const handleSubmit = async () => {
     // Если всё успешно, перенаправляем пользователя или показываем сообщение успеха
     console.log('Авторизация успешна:', response.data.value.token);
     localStorage.setItem('authToken', response.data.value.token);
-    debugger
     authorised.isAuthenticated = true
-    authorised.login =  formData.value.login
-    authorised.name =  formData.value.name
+    authorised.login =  response.data.value.token_data.data.login
+    authorised.name =  response.data.value.token_data.data.name
     setHelpMessage('Вы успешно авторизовались!')
-//    routes.push('NewsPage/')
     setTimeout(() =>{router.push({path:'/'})},1000)
-    //alert('Вы усешно автоизовались!');
+  
     // Можно добавить редирект на страницу входа или другую страницу
   } catch (error) {
       setErrorMessage(`Ошибка на сервере, попробуйте позже.`)

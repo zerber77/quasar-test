@@ -129,24 +129,30 @@ const loadReviews = async() =>{
   try {
         // Отправляем данные на сервер
         const {response} = await getReviews()
-        if (response.error) {
-          setErrorMessage(response.error)
+        console.log('Отзывы загружены:', response.value);
+        if (response.value.error) {
+          setErrorMessage(response.value.error)
           return
         }
-        console.log('Отзывы загружены:', response.value.reviews);
         console.log('A:', authorised);
         reviews.value = response.value.reviews
-        let today = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        let yyyy = today.getFullYear();
-        today = yyyy + '-' + mm + '-' + dd;
-        reviews.value.forEach(item =>{
-          debugger
-          if (item.name === authorised.name && (item.created_at.indexOf(today) !== -1)){
-            authorised.review_sended = true
-          }
-        })
+        if(reviews.value.length){
+          let today = new Date();
+          let dd = String(today.getDate()).padStart(2, '0');
+          let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+          let yyyy = today.getFullYear();
+          today = yyyy + '-' + mm + '-' + dd;
+          reviews.value.forEach(item =>{
+            // debugger
+            //логин добавить
+              if (item.name === authorised.name && (item.created_at.indexOf(today) !== -1)){
+              authorised.review_sended = true
+            }
+          })
+        }
+        else{
+          setHelpMessage('Отзывов пока нет. Вы можете написать отзыв первым!')
+        }
     }catch (err){
       setErrorMessage(err)
     }
