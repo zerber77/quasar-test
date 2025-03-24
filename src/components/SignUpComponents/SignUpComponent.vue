@@ -95,7 +95,7 @@ const handleSubmit = async () => {
     console.log('Регистрация успешна:', response.data.value.token);
     localStorage.setItem('authToken', response.data.value.token);
     authorised.isAuthenticated = true
-    authorised.user =  formData.value.login
+    authorised.login =  formData.value.login
     setHelpMessage('Вы успешно арегистрировались!')
     setTimeout(() =>{router.push({path:'/'})},1000)
     // Можно добавить редирект на страницу входа или другую страницу

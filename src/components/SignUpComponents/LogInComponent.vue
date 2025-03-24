@@ -72,6 +72,7 @@ const handleSubmit = async () => {
     // Если всё успешно, перенаправляем пользователя или показываем сообщение успеха
     console.log('Авторизация успешна:', response.data.value.token);
     localStorage.setItem('authToken', response.data.value.token);
+    debugger
     authorised.isAuthenticated = true
     authorised.login =  formData.value.login
     authorised.name =  formData.value.name

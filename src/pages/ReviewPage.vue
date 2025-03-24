@@ -136,7 +136,17 @@ const loadReviews = async() =>{
         console.log('Отзывы загружены:', response.value.reviews);
         console.log('A:', authorised);
         reviews.value = response.value.reviews
-        return
+        let today = new Date();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
+        reviews.value.forEach(item =>{
+          debugger
+          if (item.name === authorised.name && (item.created_at.indexOf(today) !== -1)){
+            authorised.review_sended = true
+          }
+        })
     }catch (err){
       setErrorMessage(err)
     }
