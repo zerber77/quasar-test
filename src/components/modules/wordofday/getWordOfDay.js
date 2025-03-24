@@ -1,7 +1,7 @@
 import {useGet} from "../axiosGet";
 
 export async function getWordOfDay(param){
-  const {response, request} = useGet('api/wordofday/getWordOfDay/?date='+param)
+  const {response, request} = useGet('api/wordofday/getWordOfDay/?date='+param,{},true)
   try {
     await request()
   }catch (e) {
