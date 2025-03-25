@@ -28,9 +28,9 @@ try {
 
 
 
-  // Проверяем существование пользователя с указанным логином
+  // 
   try {
-    $stmt = $pdo->prepare("SELECT u.name, r.review, r.created_at  FROM reviews AS r  LEFT JOIN users u ON r.user_id = u.user_id");
+    $stmt = $pdo->prepare("SELECT u.name, u.login, r.review, r.created_at  FROM reviews AS r  LEFT JOIN users u ON r.user_id = u.user_id");
     $stmt->execute();
   }catch (\PDOException $e) {
     echo json_encode(['error' => 'Ошибка БД'.$e->getMessage()]);

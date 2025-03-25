@@ -150,7 +150,6 @@ const linksList = [
 
     onMounted(async ()=>{
       const token = localStorage.getItem('authToken')
-      debugger
       if (token){
         try {
           const {response} = await  isTokenValid()
@@ -162,6 +161,7 @@ const linksList = [
             authorised.isAuthenticated = true
             authorised.login = response.value.token_data.decoded_token.data.login
             authorised.name = response.value.token_data.decoded_token.data.name
+            authorised.review_sended = true
           }
 
         }catch (err){

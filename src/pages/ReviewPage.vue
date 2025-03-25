@@ -136,6 +136,7 @@ const loadReviews = async() =>{
         }
         console.log('A:', authorised);
         reviews.value = response.value.reviews
+        authorised.review_sended = false
         if(reviews.value.length){
           let today = new Date();
           let dd = String(today.getDate()).padStart(2, '0');
@@ -144,8 +145,7 @@ const loadReviews = async() =>{
           today = yyyy + '-' + mm + '-' + dd;
           reviews.value.forEach(item =>{
             // debugger
-            //логин добавить
-              if (item.name === authorised.name && (item.created_at.indexOf(today) !== -1)){
+              if (item.name === authorised.name && item.login === authorised.login && (item.created_at.indexOf(today) !== -1)){
               authorised.review_sended = true
             }
           })
