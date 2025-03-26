@@ -112,7 +112,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, inject} from "vue";
 import VueApexCharts from 'vue3-apexcharts'
 import CalendarComponent from "components/IndexComponents/CalendarComponent.vue";
 import {getWordOfDay} from "components/modules/wordofday/getWordOfDay";
@@ -193,6 +193,7 @@ const loading = ref(false)
 const loadingNews = ref(false)
 
 const {help, error,helpMessage,errorMessage, setHelpMessage, setErrorMessage} = useMessageVars()
+const authorised = inject('authorised');
 
 const news = ref([])
 let word = ref('')
@@ -250,6 +251,10 @@ const loadWords = async () => {
 }
 
 onMounted( ()=>{
+  // if (!authorised.isAuthenticated) {
+  //   setErrorMessage(`Вы не авторизованы на сайте. Для получения доступа ко всем функциям необходимо зарегистрироваться`)
+  //   return
+  // }
   loadWords()
 })
 

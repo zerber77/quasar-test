@@ -8,7 +8,14 @@
     :helpMessage = "helpMessage"
   />
   <q-page>
-    <h1 class="text-center text-green-10" style="font-size: 3rem">Отзывы и предложения</h1>
+    <h1 class="text-center text-green-10" style="font-size: 3rem">Отзывы и предложения
+      <q-icon
+              class="text-green-8"
+              style="font-size: 2rem"
+              name="help"
+              @click.prevent="setHelpMessage(HelpMessages[0])"
+            />
+    </h1>
     <div v-if="authorised.isAuthenticated && !authorised.review_sended" class="q-pa-md">
       <!-- Кнопка или textarea -->
       <transition name="fade" mode="out-in">
@@ -158,9 +165,23 @@ const loadReviews = async() =>{
     }
 }
 
+const HelpMessages = ref([
+  'Здесь вы можете написать ваши прдложения по расширению функционала приложения,' +
+  'либо указать не выявленные недостатки. Ваше мнение очень важно нам! (Это правда)' +
+  'Внимание! В день можно написать только один отзыв.',
+])
 </script>
 
 <style scoped>
+h1{
+  line-height: 3rem;
+}
+@media (max-width: 900px) {
+  h1{
+    font-size: 2rem;
+    line-height: 3rem;
+    }
+}
 /* Анимация появления/исчезновения */
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s ease, transform 0.3s ease;

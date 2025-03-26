@@ -9,9 +9,9 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 include("../../const.php");
 require("../../auth/VerifyToken.php");
 
-$token = verifyToken($key);
-if (array_key_exists('error', $token)) {
-  echo json_encode ($token);
+$token_erroroken = verifyToken($key);
+if (array_key_exists('error', $token_error)) {
+  echo json_encode ($token_error);
   exit;
 }
 

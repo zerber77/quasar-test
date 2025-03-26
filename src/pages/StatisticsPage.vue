@@ -36,33 +36,33 @@
                 @update = "dateSet"
               />
       </div>
-      <div class="col-12 col-md-8 text-center">
+      <div v-if="authorised.isAuthenticated" class="col-12 col-md-8 text-center">
               <q-btn
                 v-if = "calcButton && word.length > 1"
-                :label="loading ? 'Остановить загрузку' : 'Посчитать'"
+                :label="'Посчитать'"
                 color="primary"
                 @click="click()"
               />
-        <div class="col-12 col-md-12 text-center" style="min-height: 300px !important;">
-                 <ChartBarComponent
-                   :optionsX = "options"
-                   :seriesY = "series"
-                   :height = 400
-                   :word = "word"
-                   @selected = loadNews
-                 />
-                   <q-inner-loading :showing="loading">
-                     <q-spinner-gears size="50px" color="primary" />
-                   </q-inner-loading>
-                  <div v-if="options.length" class="title">Количество упоминаний слова {{word}} в новостях
-                    <q-icon
-                      class="text-green-8"
-                      style="font-size: 2rem"
-                      name="help"
-                      @click.prevent="setHelpMessage(HelpMessages[1])"
-                    />
-                  </div>
-        </div>
+          <div class="col-12 col-md-12 text-center" style="min-height: 300px !important;">
+                  <ChartBarComponent
+                    :optionsX = "options"
+                    :seriesY = "series"
+                    :height = 400
+                    :word = "word"
+                    @selected = loadNews
+                  />
+                    <!-- <q-inner-loading :showing="loading">
+                      <q-spinner-gears size="50px" color="primary" />
+                    </q-inner-loading> -->
+                    <div v-if="options.length" class="title">Количество упоминаний слова {{word}} в новостях
+                      <q-icon
+                        class="text-green-8"
+                        style="font-size: 2rem"
+                        name="help"
+                        @click.prevent="setHelpMessage(HelpMessages[1])"
+                      />
+                    </div>
+          </div>
 
       </div>
     </div>
@@ -85,13 +85,13 @@
         </div>
     </div>
 
-    <div class="col-12 q-pa-md " style="min-height: 200px">
+    <div v-if="authorised.isAuthenticated" class="col-12 q-pa-md " style="min-height: 200px">
       <div v-if="optionsX.length" class="q-pa-lg row q-gutter-md flex-center">
-        <q-item>
+        <!-- <q-item>
             <q-inner-loading :showing="loadingNews">
               <q-spinner-gears size="50px" color="primary" />
             </q-inner-loading>
-        </q-item >
+        </q-item > -->
           <q-card
             v-for="item in filteredNews"
             :key="item.id"
@@ -147,10 +147,9 @@ let optionsX = ref([])
 let seriesY = ref([])
 
 onMounted(()=>{
-  // if (!authorised.isAuthenticated) {
-  //   calcButton.value = false
-  //   setErrorMessage(`Вы не авторизованы на сайте. Для получения доступа ко всем функциям необходимо зарегистрироваться`)
-  // }
+  if (!authorised.isAuthenticated) {
+    setErrorMessage(`Вы не авторизованы на сайте. Для получения доступа ко всем функциям необходимо зарегистрироваться`)
+  }
 })
 
 const loadNews = async (date, word ) =>{
@@ -184,6 +183,11 @@ const  getDatesArray = async (start, end) => {
       ////отлов ишибок try!
       const {response} = await getWordCountByDate(start, word.value)//   await axios.get('http://quasar-test/api/')
       count.value = response.value
+      if (count.value.error){
+        setErrorMessage(`Ошибка:`+ count.value.error )
+        authorised.isAuthenticated = false
+        return
+      }
       options.value.push(start)
       series.value.push(count.value)
       // options.value.xaxis.categories.push(start)

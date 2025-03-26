@@ -12,7 +12,6 @@
         <div class="col-12 col-md-4 row">
         <CalendarComponent
           :range = "false"
-          :disabled = "loading"
           @update = "dateChanged"
         />
           <q-icon
@@ -45,11 +44,11 @@
             />
           </div>
         </div>
-        <q-item class="text-center full">
+        <!-- <q-item class="text-center full">
           <q-inner-loading :showing="loading">
             <q-spinner-gears size="50px" color="primary" />
           </q-inner-loading>
-        </q-item>
+        </q-item> -->
        </div>
     </div>
 
@@ -88,7 +87,7 @@
 <script setup>
 import {useRouter} from "vue-router";
 import {getLastNewsByAgency} from "components/modules/getLastNewsByAgency";
-import {computed, onMounted, onUpdated, ref, watch} from "vue";
+import {inject, onMounted, onUpdated, ref, watch} from "vue";
 import {getAllNewsByDate} from "components/modules/newsByDate/getAllNewsByDate";
 
 import {getAgencies} from "components/modules/getAgencies";
@@ -111,9 +110,9 @@ import useMessageVars from "components/modules/messages/getMessageVars";
     let current = ref(agCount.value)  ///текущее значения пагинации
     const NEWS_PER_PAGE = 5 ///
     let agencies = ref({})  ///агентство - ключ колич-во сообщений - значение
-    let loading = ref(false) //индиуатор загрузки
 
     const {help, error,helpMessage,errorMessage, setHelpMessage, setErrorMessage} = useMessageVars()
+    const authorised = inject('authorised');
 /////оси для статистики агентств
     let optionsX = ref([])
     let seriesY = ref([])
@@ -137,18 +136,32 @@ import useMessageVars from "components/modules/messages/getMessageVars";
       //const {response} = await  getAgencies()
       optionsX.value.length = 0
       seriesY.value.length = 0
-      loading.value = true
-      const {response} = await  getAllNewsByDate(new Date().toISOString().slice(0, 10))
-      news.value = response.value
-      if (news.value.length) {
-        countAgencies(news)
-      }
-      else {
-        setErrorMessage(`Для выбранной даты новостей в базе данных не найдено`)
-      }
-      agNewsFiltered.value = news.value
-      setPaginationData()
-      loading.value = false
+      
+      // console.log('authorised',authorised)
+      // if(!authorised.isAuthenticated){
+      //   setErrorMessage(`Для выполнения поиска необходимо авторизоваться`)
+      //   return
+      // }
+      try{
+        const {response} = await  getAllNewsByDate(new Date().toISOString().slice(0, 10))
+        news.value = response.value
+        if (news.value.error){
+          setErrorMessage(`Ошибка:`+ news.value.error )
+          return
+        }
+        
+        if (news.value.length) {
+          countAgencies(news)
+          agNewsFiltered.value = news.value
+          setPaginationData()
+        }
+        else {
+          setErrorMessage(`Для выбранной даты новостей в базе данных не найдено`)
+        }
+    }catch(err){
+      setErrorMessage(`Ошибка:`+ err)
+      return
+    }
     })
 
     //////отслеживаем выбор персоны в селекте searchPersonComponent
@@ -202,7 +215,6 @@ import useMessageVars from "components/modules/messages/getMessageVars";
       agCount.value = Math.ceil(agNewsFiltered.value.length/NEWS_PER_PAGE)
       current.value = agCount.value
       agNewsPaginated.value = agNewsFiltered.value.slice(-NEWS_PER_PAGE)
-      loading.value = false
     }
 
     watch((current),(newVal,oldVal)=>{
@@ -217,7 +229,6 @@ async function dateChanged (date)  {
   news.value.length = 0
   optionsX.value.length = 0
   seriesY.value.length = 0
-  loading.value = true
   const {response} = await  getAllNewsByDate(date)
   news.value = response.value
   if (news.value.length) {
@@ -228,7 +239,6 @@ async function dateChanged (date)  {
   else {
     setErrorMessage(`Для выбранной даты новостей в базе данных не найдено`)
   }
-  loading.value = false
 }
 
 function filterAgencies(agency){
