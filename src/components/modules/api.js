@@ -4,12 +4,9 @@
 import axios from "axios";
 
 const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL, // Динамическое определение baseURL
 //baseURL: 'http://quasar-test/',
-baseURL: '/',
-  // auth:{
-  //     username: 'admin',
-  //     password: 'admin'
-  // },
+//baseURL: '/',
   withCredentials:true,
   crossDomain:true
 })
@@ -29,10 +26,8 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(config=>{
   return config
 }, error=>{
-  //error.response.data.message === 'Token has expired'
-  console.log('ERROR  in api. '+ error)
-
-  return Promise.reject(error);
+    console.log('ERROR  in api. '+ error)
+    return Promise.reject(error);
 })
 
 export default api
