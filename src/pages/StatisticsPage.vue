@@ -147,9 +147,9 @@ let optionsX = ref([])
 let seriesY = ref([])
 
 onMounted(()=>{
-  if (!authorised.isAuthenticated) {
-    setErrorMessage(`Вы не авторизованы на сайте. Для получения доступа ко всем функциям необходимо зарегистрироваться`)
-  }
+  // if (!authorised.isAuthenticated) {
+  //   setErrorMessage(`Вы не авторизованы на сайте. Для получения доступа ко всем функциям необходимо зарегистрироваться`)
+  // }
 })
 
 const loadNews = async (date, word ) =>{
