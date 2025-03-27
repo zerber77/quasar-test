@@ -65,6 +65,9 @@
           </div>
 
       </div>
+      <div v-if="!authorised.isAuthenticated" class="col-12 col-md-8 text-center">
+        <h4 class="text-green-10">Для подсчета статистики необходимо <router-link to="/SignUpPage/">войти или зарегистрироваться</router-link></h4>
+      </div>
     </div>
 
     <div v-if="optionsX.length" class="row">
@@ -127,6 +130,7 @@ import {getNewsWordDyDate} from "components/modules/statistics/getNewsWordDyDate
 import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
 import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
 import useMessageVars from "components/modules/messages/getMessageVars";
+import {clearLoginData} from "components/SignUpComponents/clearLoginData";
 
 const word = ref('Trump')
 const calcButton = ref(true)
@@ -185,7 +189,7 @@ const  getDatesArray = async (start, end) => {
       count.value = response.value
       if (count.value.error){
         setErrorMessage(`Ошибка:`+ count.value.error )
-        authorised.isAuthenticated = false
+        clearLoginData(authorised)
         return
       }
       options.value.push(start)

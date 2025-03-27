@@ -21,7 +21,9 @@
           name="help"
           @click.prevent="setHelpMessage(HelpMessages[0])"
         />
-
+      </div>
+      <div v-if="!authorised.isAuthenticated" class="col-12 col-md-8 text-center">
+        <h4 class="text-green-10">Для получения доступа к функциям сайта необходимо <router-link to="/SignUpPage/">войти или зарегистрироваться</router-link></h4>
       </div>
       <div class="col-12 col-md-4 text-center">
         <q-item>
@@ -120,7 +122,7 @@ import {getNewsWordDyDate} from "components/modules/statistics/getNewsWordDyDate
 import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
 import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
 import useMessageVars from "components/modules/messages/getMessageVars";
-
+import {clearLoginData} from "components/SignUpComponents/clearLoginData";
 
 ///НАСТРОЙКИ ПИРОГОВ (вынести в компонент надо)
 const options = ref({
@@ -236,25 +238,28 @@ const loadWords = async () => {
   try {
     const {response} = await  getWordOfDay(selectedDate.value)
     const data = response.value
-    if (data.error){
+    if (data.error){   /////это ошибка токена, чаще всего, он истек, очистить авторизационные данные
       setErrorMessage(`Ошибка:`+ data.error )
+      clearLoginData(authorised)
+      // localStorage.removeItem('authToken')
+      // authorised.isAuthenticated = false
+      // authorised.login = ''
+      // authorised.name = ''
       return
     }
     if (!data.data.length) {
       setErrorMessage(`Для даты ${selectedDate.value} данные отсутствуют`)
     }
     else wordsArrayTransform(data.data)
-  }catch (err){   ////все ошибки токена возвращают код 401
+  }catch (err){  
     if (err === 'Request failed with status code 401') setErrorMessage(`Ошибка, вы не зарегистрированы в системе. Зарегистрируйтесь или войдите на сайт.`)
     else setErrorMessage(`Неполадки на сервере, попробуйте позже.`)
   }
 }
 
 onMounted( ()=>{
-  // if (!authorised.isAuthenticated) {
-  //   setErrorMessage(`Вы не авторизованы на сайте. Для получения доступа ко всем функциям необходимо зарегистрироваться`)
-  //   return
-  // }
+  const token = localStorage.getItem('authToken')
+  authorised.isAuthenticated = true ///еали есть токен, значит мы авторизованы, его валидность будет проверена в запросе
   loadWords()
 })
 

@@ -150,6 +150,7 @@ const linksList = [
 
     onMounted(async ()=>{
       const token = localStorage.getItem('authToken')
+      authorised.isAuthenticated = true ///еали есть токен, значит мы авторизованы, проверим его валидность
       if (token){
         try {
           const {response} = await  isTokenValid()

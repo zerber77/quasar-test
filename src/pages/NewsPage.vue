@@ -10,46 +10,48 @@
   <q-page class="flex-center">
     <div class="row q-pa-md">
         <div class="col-12 col-md-4 row">
-        <CalendarComponent
-          :range = "false"
-          @update = "dateChanged"
-        />
-          <q-icon
-            class="q-mt-md text-green-8"
-            style="font-size: 2rem"
-            name="help"
-            @click.prevent="setHelpMessage(HelpMessages[0])"
+          <CalendarComponent
+            :range = "false"
+            @update = "dateChanged"
           />
-  <!--      <SelectAgencyComponent-->
-  <!--        v-model:selectedPerson = "agency"-->
-  <!--        :inputList = "agencies"-->
-  <!--      >-->
-  <!--      </SelectAgencyComponent>-->
-         </div>
-
-      <div  class="row col-12 col-md-8">
-        <div v-if="optionsX.length" class="text-center full" style="min-height: 300px !important;">
-          <ChartBarComponent
-            :optionsX = "optionsX"
-            :seriesY = "seriesY"
-            :height = "400"
-            @selected = filterAgencies
-          />
-          <div v-if="optionsX.length" class="title">Количество публикаций по агентствам
             <q-icon
-              class="text-green-8"
+              class="q-mt-md text-green-8"
               style="font-size: 2rem"
               name="help"
-              @click.prevent="setHelpMessage(HelpMessages[1])"
+              @click.prevent="setHelpMessage(HelpMessages[0])"
             />
-          </div>
+    <!--      <SelectAgencyComponent-->
+    <!--        v-model:selectedPerson = "agency"-->
+    <!--        :inputList = "agencies"-->
+    <!--      >-->
+    <!--      </SelectAgencyComponent>-->
         </div>
-        <!-- <q-item class="text-center full">
-          <q-inner-loading :showing="loading">
-            <q-spinner-gears size="50px" color="primary" />
-          </q-inner-loading>
-        </q-item> -->
-       </div>
+          <div v-if="!authorised.isAuthenticated" class="col-12 col-md-8 text-center">
+              <h4 class="text-green-10">Для получения доступа к функциям сайта необходимо <router-link to="/SignUpPage/">войти или зарегистрироваться</router-link></h4>
+          </div>
+        <div  class="row col-12 col-md-8">
+            <div v-if="optionsX.length" class="text-center full" style="min-height: 300px !important;">
+              <ChartBarComponent
+                :optionsX = "optionsX"
+                :seriesY = "seriesY"
+                :height = "400"
+                @selected = filterAgencies
+              />
+              <div v-if="optionsX.length" class="title">Количество публикаций по агентствам
+                <q-icon
+                  class="text-green-8"
+                  style="font-size: 2rem"
+                  name="help"
+                  @click.prevent="setHelpMessage(HelpMessages[1])"
+                />
+              </div>
+            </div>
+            <!-- <q-item class="text-center full">
+              <q-inner-loading :showing="loading">
+                <q-spinner-gears size="50px" color="primary" />
+              </q-inner-loading>
+            </q-item> -->
+          </div>
     </div>
 
     <div v-if="news.length" class="col-12 q-pa-lg row flex-center">
@@ -98,6 +100,7 @@ import {getWordOfDay} from "components/modules/wordofday/getWordOfDay";
 import ErrorMessageComponent from "components/Modals/ErrorMessageComponent.vue";
 import HelpMessageComponent from "components/Modals/HelpMessageComponent.vue";
 import useMessageVars from "components/modules/messages/getMessageVars";
+import {clearLoginData} from "components/SignUpComponents/clearLoginData";
 
  //   let agency = ref(router.currentRoute.value.query)
 
@@ -136,17 +139,14 @@ import useMessageVars from "components/modules/messages/getMessageVars";
       //const {response} = await  getAgencies()
       optionsX.value.length = 0
       seriesY.value.length = 0
-      
-      // console.log('authorised',authorised)
-      // if(!authorised.isAuthenticated){
-      //   setErrorMessage(`Для выполнения поиска необходимо авторизоваться`)
-      //   return
-      // }
+      const token = localStorage.getItem('authToken')
+      authorised.isAuthenticated = true ///еали есть токен, значит мы авторизованы, его валидность будет проверена в запросе
       try{
         const {response} = await  getAllNewsByDate(new Date().toISOString().slice(0, 10))
         news.value = response.value
         if (news.value.error){
-          setErrorMessage(`Ошибка:`+ news.value.error )
+          setErrorMessage(`Ошибка:`+ news.value.error ) ///ошибка истек токен
+          clearLoginData(authorised)
           return
         }
         
@@ -211,7 +211,7 @@ import useMessageVars from "components/modules/messages/getMessageVars";
 //     })
 
 /////////////////////////////////////////////////////////////////////////
-   const setPaginationData = () =>{
+const setPaginationData = () =>{
       agCount.value = Math.ceil(agNewsFiltered.value.length/NEWS_PER_PAGE)
       current.value = agCount.value
       agNewsPaginated.value = agNewsFiltered.value.slice(-NEWS_PER_PAGE)
