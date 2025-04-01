@@ -1,8 +1,8 @@
 
 import {useGet} from "../axiosGet";
 
-export async function getAllNewsByDate(date){
-  const {response, request} = useGet('api/news/byDate/getAllNewsByDate/?date='+date,{},true)
+export async function getAllNewsByDate(date, free =false){
+  const {response, request} = useGet('api/news/byDate/getAllNewsByDate/?date='+ date + '&free='+free,{},true)
   try {
     await request()
   }catch (e) {

@@ -8,18 +8,23 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 include("../../../const.php");
 require("../../../auth/VerifyToken.php");
 
-$token_error = verifyToken($key);
-if (array_key_exists('error', $token_error)) {
-  echo json_encode ($token_error);
-  exit;
+$free = '';
+if(isset($_GET['free'])) {
+  $free = $_GET['free'];
 }
 
+//если не передан параметр $free, то выполняется проверка токена пользователя
+if(!$free){
+  $token_error = verifyToken($key);
+  if (array_key_exists('error', $token_error)) {
+    echo json_encode ($token_error);
+    exit;
+  }
+}
 $date = '';
 if(isset($_GET['date'])) {
   $date = $_GET['date'];
 }
-
-//include ("../../../pages/const.php");
 
 $result = mysqli_query($dbcnx, "SELECT * FROM mynews WHERE time_new LIKE '$date%' ");
 $arr = [];

@@ -135,14 +135,10 @@ import {clearLoginData} from "components/SignUpComponents/clearLoginData";
       }
     }
 
-    onMounted(async ()=>{
-      //const {response} = await  getAgencies()
-      optionsX.value.length = 0
-      seriesY.value.length = 0
-      const token = localStorage.getItem('authToken')
-      authorised.isAuthenticated = true ///еали есть токен, значит мы авторизованы, его валидность будет проверена в запросе
+/////////загрузка данных по выбору даты
+    const loadNews = async(date, free) =>{
       try{
-        const {response} = await  getAllNewsByDate(new Date().toISOString().slice(0, 10))
+        const {response} = await  getAllNewsByDate(date, free)
         news.value = response.value
         if (news.value.error){
           setErrorMessage(`Ошибка:`+ news.value.error ) ///ошибка истек токен
@@ -162,16 +158,19 @@ import {clearLoginData} from "components/SignUpComponents/clearLoginData";
       setErrorMessage(`Ошибка:`+ err)
       return
     }
+    }
+
+    onMounted( ()=>{
+      //const {response} = await  getAgencies()
+      optionsX.value.length = 0
+      seriesY.value.length = 0
+      //const token = localStorage.getItem('authToken')
+      authorised.isAuthenticated = true ///еали есть токен, значит мы авторизованы, его валидность будет проверена в запросе
+      loadNews(new Date().toISOString().slice(0, 10), true)
+  
     })
 
-    //////отслеживаем выбор персоны в селекте searchPersonComponent
-    // watch(() => agency, () => {
-    //     console.log('watch',agency.value)
-    //     getCountAg(agency.value.name)
-    //   },
-    //   {deep: true,}
-    // );
-
+    
 ///////////////////////////////////////////////////////////////////////
 //     async function getLastNews(ag){
 //        const {response} = await  getLastNewsByAgency(ag)
@@ -229,16 +228,7 @@ async function dateChanged (date)  {
   news.value.length = 0
   optionsX.value.length = 0
   seriesY.value.length = 0
-  const {response} = await  getAllNewsByDate(date)
-  news.value = response.value
-  if (news.value.length) {
-    countAgencies(news)
-    agNewsFiltered.value = news.value
-    setPaginationData()
-  }
-  else {
-    setErrorMessage(`Для выбранной даты новостей в базе данных не найдено`)
-  }
+  loadNews(date, false)
 }
 
 function filterAgencies(agency){
