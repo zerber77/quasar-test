@@ -7,26 +7,22 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 include("../../../const.php");
 require("../../../auth/VerifyToken.php");
+require("../../../auth/VerifyDateIsToday.php");
 
-$free = false;
-if(isset($_GET['free'])) {
-  $free = $_GET['free'];
+$date = '';
+if(isset($_GET['date'])) {
+  $date = $_GET['date'];
 }
 
-//если не передан параметр $free, то выполняется проверка токена пользователя
+//если не передана не сегодняшняя дата, то выполняется проверка токена пользователя
 $token = '';
 
-if($free == 'false'){
+if(!verifyDateIsToday($date)){
   $token = verifyToken($key);
   if (array_key_exists('error', $token)) {
     echo json_encode ($token);
     exit;
   }
-}
-
-$date = '';
-if(isset($_GET['date'])) {
-  $date = $_GET['date'];
 }
 
 $result = mysqli_query($dbcnx, "SELECT * FROM mynews WHERE time_new LIKE '$date%' ");

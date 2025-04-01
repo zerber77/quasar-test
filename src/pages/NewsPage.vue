@@ -26,10 +26,11 @@
     <!--      >-->
     <!--      </SelectAgencyComponent>-->
         </div>
-          <div v-if="!authorised.isAuthenticated" class="col-12 col-md-8 text-center">
-              <h4 class="text-green-10">Для получения доступа к функциям сайта необходимо <router-link to="/SignUpPage/">войти или зарегистрироваться</router-link></h4>
-          </div>
+          
         <div  class="row col-12 col-md-8">
+            <div v-if="!authorised.isAuthenticated" class="col-12 col-md-8 text-center">
+                <h4 class="text-red-10 ">Для получения доступа ко всем функциям сайта необходимо <router-link to="/SignUpPage/">войти или зарегистрироваться</router-link></h4>
+            </div>
             <div v-if="optionsX.length" class="text-center full" style="min-height: 300px !important;">
               <ChartBarComponent
                 :optionsX = "optionsX"
@@ -37,7 +38,7 @@
                 :height = "400"
                 @selected = filterAgencies
               />
-              <div v-if="optionsX.length" class="title">Количество публикаций по агентствам
+              <div v-if="optionsX.length" class="title">Количество публикаций по агентствам 
                 <q-icon
                   class="text-green-8"
                   style="font-size: 2rem"
@@ -54,7 +55,7 @@
           </div>
     </div>
 
-    <div v-if="news.length" class="col-12 q-pa-lg row flex-center">
+    <div v-if="news.data.length" class="col-12 q-pa-lg row flex-center">
       <q-pagination
         v-model="current"
         :max="agCount"
@@ -65,7 +66,7 @@
       />
     </div>
 <!--flex-center items-start-->
-    <div v-if="news.length" class="q-pa-lg row q-gutter-md flex-center">
+    <div v-if="news.data.length" class="q-pa-lg row q-gutter-md flex-center">
       <q-card
         v-for="item in agNewsPaginated"
         :key="item.id"
@@ -79,7 +80,7 @@
 
         <q-card-section class="q-pt-none">
           {{item.text}}
-           <div><a :href="item.link" target="_blank">Ссылка</a></div>
+          <div><a :href="item.link" target="_blank">Ссылка</a></div>
         </q-card-section>
       </q-card>
     </div>
@@ -104,7 +105,8 @@ import {clearLoginData} from "components/SignUpComponents/clearLoginData";
 
  //   let agency = ref(router.currentRoute.value.query)
 
-    let news = ref([])  ///все новости
+    let news = ref({})  ///все новости
+    news.value.data = []
 
     let agNewsFiltered = ref([]) ///отфильтрованные по агентствам
     let agNewsPaginated = ref([]) ///отфильтрованные по агентствам с пагинацией
@@ -124,7 +126,7 @@ import {clearLoginData} from "components/SignUpComponents/clearLoginData";
     const countAgencies = (input_news) =>{
       optionsX.value.length = 0
       seriesY.value.length = 0
-      agencies.value = input_news.value.reduce((acc,item) =>{
+      agencies.value = input_news.reduce((acc,item) =>{
         if (acc[item.agency] === undefined) acc[item.agency] = 1
         else acc[item.agency]  = acc[item.agency] + 1
         return acc
@@ -136,19 +138,18 @@ import {clearLoginData} from "components/SignUpComponents/clearLoginData";
     }
 
 /////////загрузка данных по выбору даты
-    const loadNews = async(date, free) =>{
+    const loadNews = async(date) =>{
       try{
-        const {response} = await  getAllNewsByDate(date, free)
+        const {response} = await  getAllNewsByDate(date)
         news.value = response.value
         if (news.value.error){
           setErrorMessage(`Ошибка:`+ news.value.error ) ///ошибка истек токен
           clearLoginData(authorised)
           return
         }
-        
-        if (news.value.length) {
-          countAgencies(news)
-          agNewsFiltered.value = news.value
+        if (news.value.data.length) {
+          countAgencies(news.value.data)
+          agNewsFiltered.value = news.value.data
           setPaginationData()
         }
         else {
@@ -165,8 +166,8 @@ import {clearLoginData} from "components/SignUpComponents/clearLoginData";
       optionsX.value.length = 0
       seriesY.value.length = 0
       //const token = localStorage.getItem('authToken')
-      authorised.isAuthenticated = true ///еали есть токен, значит мы авторизованы, его валидность будет проверена в запросе
-      loadNews(new Date().toISOString().slice(0, 10), true)
+      //authorised.isAuthenticated = true ///еали есть токен, значит мы авторизованы, его валидность будет проверена в запросе
+      loadNews(new Date().toISOString().slice(0, 10))
   
     })
 
@@ -210,7 +211,7 @@ import {clearLoginData} from "components/SignUpComponents/clearLoginData";
 //     })
 
 /////////////////////////////////////////////////////////////////////////
-const setPaginationData = () =>{
+    const setPaginationData = () =>{
       agCount.value = Math.ceil(agNewsFiltered.value.length/NEWS_PER_PAGE)
       current.value = agCount.value
       agNewsPaginated.value = agNewsFiltered.value.slice(-NEWS_PER_PAGE)
@@ -225,10 +226,10 @@ function paginateNews(val){
 }
 
 async function dateChanged (date)  {
-  news.value.length = 0
+  news.value.data = []
   optionsX.value.length = 0
   seriesY.value.length = 0
-  loadNews(date, false)
+  loadNews(date)
 }
 
 function filterAgencies(agency){
@@ -251,6 +252,8 @@ const HelpMessages = ref([
 </script>
 
 <style lang="sass" scoped>
+h4
+  font-size: 1.5em
 .my-card
   width: 100%
   max-width: 250px

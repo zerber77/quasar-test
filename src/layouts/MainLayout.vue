@@ -19,17 +19,15 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-         МИРОВЫЕ НОВОСТИ
-        </q-toolbar-title>
+        <q-toolbar-title>МИРОВЫЕ НОВОСТИ</q-toolbar-title>
 
 <!--        <q-separator dark vertical />-->
 
-        <template v-if=" authorised.isAuthenticated">
+        <template v-if="authorised.isAuthenticated">
           <q-item-section avatar>
             <q-icon name="person" />
             <q-item-label v-if="authorised.login">
-              {{authorised.login}}
+                {{authorised.login}}
             </q-item-label>
           </q-item-section>
           <q-btn to="/SignUpPage/" @click.prevent="logOut" stretch flat label="ВЫЙТИ" />
