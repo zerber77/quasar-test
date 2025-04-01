@@ -233,8 +233,8 @@ async function dateChanged (date)  {
 }
 
 function filterAgencies(agency){
-  if (!agency) agNewsFiltered.value = news.value
-  else agNewsFiltered.value = news.value.filter((item) => item.agency === agency)
+  if (!agency) agNewsFiltered.value = news.value.data
+  else agNewsFiltered.value = news.value.data.filter((item) => item.agency === agency)
   setPaginationData()
 }
 
