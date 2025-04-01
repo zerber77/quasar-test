@@ -8,19 +8,22 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 include("../../../const.php");
 require("../../../auth/VerifyToken.php");
 
-$free = '';
+$free = false;
 if(isset($_GET['free'])) {
   $free = $_GET['free'];
 }
 
 //если не передан параметр $free, то выполняется проверка токена пользователя
-if(!$free){
-  $token_error = verifyToken($key);
-  if (array_key_exists('error', $token_error)) {
-    echo json_encode ($token_error);
+$token = '';
+
+if($free == 'false'){
+  $token = verifyToken($key);
+  if (array_key_exists('error', $token)) {
+    echo json_encode ($token);
     exit;
   }
 }
+
 $date = '';
 if(isset($_GET['date'])) {
   $date = $_GET['date'];
@@ -31,5 +34,7 @@ $arr = [];
 while ($row = mysqli_fetch_assoc($result)) {
   $arr[] = $row;
 }
-echo json_encode($arr);
+
+echo json_encode(['token_data' => $token, 'data' => $arr]);
+
 
