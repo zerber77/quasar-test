@@ -8,16 +8,21 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 //session_start();
 include("../../const.php");
 require("../../auth/VerifyToken.php");
-
-$token = verifyToken($key);
-if (array_key_exists('error', $token)) {
-  echo json_encode ($token);
-  exit;
-}
+require("../../auth/VerifyDateIsToday.php");
 
 $date = '';
 if(isset($_GET['date'])) {
   $date = $_GET['date'];
+}
+
+//если не передана не сегодняшняя дата, то выполняется проверка токена пользователя
+$token = '';
+if(!verifyDateIsToday($date)){
+  $token = verifyToken($key);
+  if (array_key_exists('error', $token)) {
+    echo json_encode ($token);
+    exit;
+  }
 }
 
 $result = mysqli_query($dbcnx, "SELECT * FROM word_frequency WHERE date LIKE '$date%'");

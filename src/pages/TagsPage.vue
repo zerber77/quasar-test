@@ -241,10 +241,6 @@ const loadWords = async () => {
     if (data.error){   /////это ошибка токена, чаще всего, он истек, очистить авторизационные данные
       setErrorMessage(`Ошибка:`+ data.error )
       clearLoginData(authorised)
-      // localStorage.removeItem('authToken')
-      // authorised.isAuthenticated = false
-      // authorised.login = ''
-      // authorised.name = ''
       return
     }
     if (!data.data.length) {
@@ -258,8 +254,9 @@ const loadWords = async () => {
 }
 
 onMounted( ()=>{
-  const token = localStorage.getItem('authToken')
-  authorised.isAuthenticated = true ///еали есть токен, значит мы авторизованы, его валидность будет проверена в запросе
+  // const token = localStorage.getItem('authToken')
+  // authorised.isAuthenticated = true ///еали есть токен, значит мы авторизованы, его валидность будет проверена в запросе
+  selectedDate.value = new Date().toISOString().slice(0, 10)
   loadWords()
 })
 
@@ -307,6 +304,7 @@ const HelpMessages = ref([
 </script>
 
 <style lang="sass" scoped>
+
 .my-card
   width: 100%
   max-width: 250px
