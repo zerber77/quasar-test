@@ -22,14 +22,14 @@
           @click.prevent="setHelpMessage(HelpMessages[0])"
         />
       </div>
-      <div class="column">
+      <div class="column col-12 col-md-8">
         <div>
-          <div v-if="!authorised.isAuthenticated" class="col-12 col-md-8 text-center">
+          <div v-if="!authorised.isAuthenticated" class="text-center">
             <h4 class="text-green-10">Для получения доступа к функциям сайта необходимо <router-link to="/SignUpPage/">войти или зарегистрироваться</router-link></h4>
           </div>
         </div>
         <div class="row">  
-          <div class="col-12 col-md-4 text-center">
+          <div class="col-12 col-md-6 text-center">
             <q-item>
               <VueApexCharts
                 type="pie"
@@ -54,7 +54,7 @@
           </div>
         
 
-          <div class="col-12 col-md-4 text-center">
+          <div class="col-12 col-md-6 text-center">
             <q-item>
               <VueApexCharts
                 type="pie"
