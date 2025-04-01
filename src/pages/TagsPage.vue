@@ -52,32 +52,32 @@
               />
             </p>
           </div>
-        </div>
+        
 
-        <div class="col-12 col-md-4 text-center">
-          <q-item>
-            <VueApexCharts
-              type="pie"
-              :options="options_ru"
-              :series="series_ru"
-              class="full"
-              height="500"
-            >
-            </VueApexCharts>
-            <q-inner-loading :showing="loading">
-              <q-spinner-gears size="50px" color="primary" />
-            </q-inner-loading>
-          </q-item>
-          <p v-if="series_ru.length" class="title">Наиболее часто встречающиеся слова в новостях на русском
-          <q-icon
-            class="text-green-8"
-            style="font-size: 2rem"
-            name="help"
-            @click.prevent="setHelpMessage(HelpMessages[2])"
-          />
-          </p>
+          <div class="col-12 col-md-4 text-center">
+            <q-item>
+              <VueApexCharts
+                type="pie"
+                :options="options_ru"
+                :series="series_ru"
+                class="full"
+                height="500"
+              >
+              </VueApexCharts>
+              <q-inner-loading :showing="loading">
+                <q-spinner-gears size="50px" color="primary" />
+              </q-inner-loading>
+            </q-item>
+            <p v-if="series_ru.length" class="title">Наиболее часто встречающиеся слова в новостях на русском
+            <q-icon
+              class="text-green-8"
+              style="font-size: 2rem"
+              name="help"
+              @click.prevent="setHelpMessage(HelpMessages[2])"
+            />
+            </p>
+          </div>
         </div>
-
       </div>
     </div>
 <!--новости-->
