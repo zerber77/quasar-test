@@ -22,55 +22,62 @@
           @click.prevent="setHelpMessage(HelpMessages[0])"
         />
       </div>
-      <div v-if="!authorised.isAuthenticated" class="col-12 col-md-8 text-center">
-        <h4 class="text-green-10">Для получения доступа к функциям сайта необходимо <router-link to="/SignUpPage/">войти или зарегистрироваться</router-link></h4>
-      </div>
-      <div class="col-12 col-md-4 text-center">
-        <q-item>
-          <VueApexCharts
-            type="pie"
-            :options="options"
-            :series="series"
-            class="full"
-            height="500"
-          >
-          </VueApexCharts>
-          <q-inner-loading :showing="loading">
-            <q-spinner-gears size="50px" color="primary" />
-          </q-inner-loading>
-        </q-item>
-        <p v-if="series.length" class="title">Наиболее часто встречающиеся слова в новостях на английском
+      <div class="column">
+        <div>
+          <div v-if="!authorised.isAuthenticated" class="col-12 col-md-8 text-center">
+            <h4 class="text-green-10">Для получения доступа к функциям сайта необходимо <router-link to="/SignUpPage/">войти или зарегистрироваться</router-link></h4>
+          </div>
+        </div>
+        <div class="row">  
+          <div class="col-12 col-md-4 text-center">
+            <q-item>
+              <VueApexCharts
+                type="pie"
+                :options="options"
+                :series="series"
+                class="full"
+                height="500"
+              >
+              </VueApexCharts>
+              <q-inner-loading :showing="loading">
+                <q-spinner-gears size="50px" color="primary" />
+              </q-inner-loading>
+            </q-item>
+            <p v-if="series.length" class="title">Наиболее часто встречающиеся слова в новостях на английском
+              <q-icon
+                class="text-green-8"
+                style="font-size: 2rem"
+                name="help"
+                @click.prevent="setHelpMessage(HelpMessages[1])"
+              />
+            </p>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4 text-center">
+          <q-item>
+            <VueApexCharts
+              type="pie"
+              :options="options_ru"
+              :series="series_ru"
+              class="full"
+              height="500"
+            >
+            </VueApexCharts>
+            <q-inner-loading :showing="loading">
+              <q-spinner-gears size="50px" color="primary" />
+            </q-inner-loading>
+          </q-item>
+          <p v-if="series_ru.length" class="title">Наиболее часто встречающиеся слова в новостях на русском
           <q-icon
             class="text-green-8"
             style="font-size: 2rem"
             name="help"
-            @click.prevent="setHelpMessage(HelpMessages[1])"
+            @click.prevent="setHelpMessage(HelpMessages[2])"
           />
-        </p>
-      </div>
+          </p>
+        </div>
 
-      <div class="col-12 col-md-4 text-center">
-        <q-item>
-          <VueApexCharts
-            type="pie"
-            :options="options_ru"
-            :series="series_ru"
-            class="full"
-            height="500"
-          >
-          </VueApexCharts>
-          <q-inner-loading :showing="loading">
-            <q-spinner-gears size="50px" color="primary" />
-          </q-inner-loading>
-        </q-item>
-        <p v-if="series_ru.length" class="title">Наиболее часто встречающиеся слова в новостях на русском
-        <q-icon
-          class="text-green-8"
-          style="font-size: 2rem"
-          name="help"
-          @click.prevent="setHelpMessage(HelpMessages[2])"
-        />
-        </p>
       </div>
     </div>
 <!--новости-->
@@ -304,7 +311,8 @@ const HelpMessages = ref([
 </script>
 
 <style lang="sass" scoped>
-
+h4
+  font-size: 1.5em
 .my-card
   width: 100%
   max-width: 250px
